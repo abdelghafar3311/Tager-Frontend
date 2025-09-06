@@ -1,0 +1,80 @@
+.con {
+  position: relative;
+  .msg {
+    opacity: 0;
+    position: absolute;
+    margin: auto;
+    background-color: rgba($color: #000000, $alpha: 0.7);
+    transition: all 0.2s ease-in-out;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  .l {
+    &::before {
+      content: "";
+      position: absolute;
+      border: 7px solid transparent;
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-right-color: rgba($color: #000000, $alpha: 0.7);
+    }
+    left: 108%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .r {
+    &::before {
+      content: "";
+      position: absolute;
+      border: 7px solid transparent;
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left-color: rgba($color: #000000, $alpha: 0.7);
+    }
+    right: 108%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .t {
+    &::before {
+      content: "";
+      position: absolute;
+      border: 7px solid transparent;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-bottom-color: rgba($color: #000000, $alpha: 0.7);
+    }
+    top: 108%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .b {
+    &::before {
+      content: "";
+      position: absolute;
+      border: 7px solid transparent;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-top-color: rgba($color: #000000, $alpha: 0.7);
+    }
+    bottom: 108%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &:hover {
+    .msg {
+      display: inline-block;
+      opacity: 1;
+    }
+  }
+}

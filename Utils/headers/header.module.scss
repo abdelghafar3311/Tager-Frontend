@@ -1,0 +1,27 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #64dea7;
+  .Logo {
+    display: flex;
+    align-items: center;
+    gap: 3;
+  }
+  .title {
+    font-size: 14;
+    font-weight: bold;
+    color: #097;
+  }
+  .headerType {
+    display: flex;
+    align-items: center;
+    gap: 3;
+    color: #097;
+    cursor: pointer;
+    span {
+      font-size: 16;
+    }
+  }
+}
