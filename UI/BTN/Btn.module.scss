@@ -2,33 +2,169 @@
 
 // var color
 $color: #097;
+$colorLD: #3ec5a894;
+$Disbanded: #aaaaaa9d;
+
+$warning: #b45309;
+$alarm: #b91c1c;
 
 .btn {
-  padding: 10px 20px;
+  padding: 5px 20px;
   border-radius: 5px;
   text-align: center;
   border: none;
   cursor: pointer;
   font-size: 16px;
-  font-weight: bold;
   transition: all 0.2s ease-in-out;
-  background-color: $color;
-  color: #fff;
-  &:hover {
-    background-color: color.scale($color, $lightness: -10%);
-  }
-  &.light {
-    background-color: #fff;
-    color: $color;
-    border: 1px solid $color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  &.usually {
+    background-color: $color;
+    color: #fff;
     &:hover {
-      background-color: $color;
-      color: #fff;
+      background-color: color.scale($color, $lightness: -20%);
     }
   }
-  &.block {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
+  &.alarm {
+    background-color: $alarm;
+    color: #fff;
+    &:hover {
+      background-color: color.scale($alarm, $lightness: -20%);
+    }
+  }
+  &.warning {
+    background-color: $warning;
+    color: #fff;
+    &:hover {
+      background-color: color.scale($warning, $lightness: -20%);
+    }
+  }
+  &.light {
+    &.usually {
+      background-color: #fff;
+      color: $color;
+      border: 1px solid $color;
+      &:hover {
+        background-color: $color;
+        color: #fff;
+      }
+    }
+    &.alarm {
+      background-color: #fff;
+      color: $alarm;
+      border: 1px solid $alarm;
+      &:hover {
+        background-color: $alarm;
+        color: #fff;
+      }
+    }
+    &.warning {
+      background-color: #fff;
+      color: $warning;
+      border: 1px solid $warning;
+      &:hover {
+        background-color: $warning;
+        color: #fff;
+      }
+    }
+  }
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.btnLoader {
+  padding: 5px 20px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: not-allowed;
+  font-size: 16px;
+  transition: all 0.2s ease-in-out;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  &.usually {
+    border: 1px solid $colorLD;
+    color: $colorLD;
+    & .loader {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border: 2px solid transparent;
+      border-top-color: $colorLD;
+      border-bottom-color: $colorLD;
+      border-left-color: $colorLD;
+      border-radius: 50%;
+      animation: spin 1s infinite;
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+  }
+  &.alarm {
+    border: 1px solid #aa0707ab;
+    color: #aa0707ab;
+    & .loader {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border: 2px solid transparent;
+      border-top-color: #aa0707ab;
+      border-bottom-color: #aa0707ab;
+      border-left-color: #aa0707ab;
+      border-radius: 50%;
+      animation: spin 1s infinite;
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+  }
+  &.warning {
+    border: 1px solid #af8f02a2;
+    color: #af8f02a2;
+    & .loader {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border: 2px solid transparent;
+      border-top-color: #af8f02a2;
+      border-bottom-color: #af8f02a2;
+      border-left-color: #af8f02a2;
+      border-radius: 50%;
+      animation: spin 1s infinite;
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+  }
+}
+
+.btnDisabled {
+  padding: 5px 20px;
+  border-radius: 5px;
+  text-align: center;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: not-allowed;
+  font-size: 16px;
+  background-color: $Disbanded;
+  color: #fff;
+  &.light {
+    background-color: #fff;
+    color: $Disbanded;
+    border: 1px solid $Disbanded;
   }
 }

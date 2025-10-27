@@ -1,0 +1,25 @@
+@use "../../styles/_grid.scss" as *;
+
+@include grid(12);
+
+.choose {
+  width: 40%;
+  height: 30%;
+  background-color: #fff;
+  border: 1px solid #808080;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  //   font-size: 36px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: #eceaea;
+  }
+  &.active {
+    color: #097;
+    border-color: #097;
+    background-color: #c8f9ee;
+  }
+}

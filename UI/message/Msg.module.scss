@@ -1,7 +1,11 @@
 .con {
   position: relative;
+
   .msg {
+    // Default tooltip style (hidden initially)
     opacity: 0;
+    display: none;
+    width: max-content;
     position: absolute;
     margin: auto;
     background-color: rgba($color: #000000, $alpha: 0.7);
@@ -9,8 +13,10 @@
     color: #fff;
     padding: 5px;
     border-radius: 5px;
+    z-index: 999;
   }
 
+  // Directions (left, right, top, bottom)
   .l {
     &::before {
       content: "";
@@ -21,7 +27,7 @@
       transform: translateY(-50%);
       border-right-color: rgba($color: #000000, $alpha: 0.7);
     }
-    left: 108%;
+    left: 115%;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -36,7 +42,7 @@
       transform: translateY(-50%);
       border-left-color: rgba($color: #000000, $alpha: 0.7);
     }
-    right: 108%;
+    right: 115%;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -51,7 +57,7 @@
       transform: translateX(-50%);
       border-bottom-color: rgba($color: #000000, $alpha: 0.7);
     }
-    top: 108%;
+    top: 115%;
     left: 50%;
     transform: translateX(-50%);
   }
@@ -66,15 +72,157 @@
       transform: translateX(-50%);
       border-top-color: rgba($color: #000000, $alpha: 0.7);
     }
-    bottom: 108%;
+    bottom: 115%;
     left: 50%;
     transform: translateX(-50%);
   }
 
   &:hover {
-    .msg {
+    // Transition effect depending on direction
+    .msg.trans {
       display: inline-block;
       opacity: 1;
+
+      &.l {
+        animation: moveLeft 0.2s ease-in-out;
+      }
+
+      &.r {
+        animation: moveRight 0.2s ease-in-out;
+      }
+
+      &.t {
+        animation: moveUp 0.2s ease-in-out;
+      }
+
+      &.b {
+        animation: moveDown 0.2s ease-in-out;
+      }
     }
+
+    // Fade in effect
+    .msg.fade {
+      display: inline-block;
+      animation: fade 0.2s ease-in-out;
+    }
+
+    // Scale (zoom in) effect
+    .msg.scale {
+      display: inline-block;
+      opacity: 1;
+      &.l {
+        animation: scaleLeft 0.2s ease-in-out;
+      }
+
+      &.r {
+        animation: scaleRight 0.2s ease-in-out;
+      }
+
+      &.t {
+        animation: scaleUp 0.2s ease-in-out;
+      }
+
+      &.b {
+        animation: scaleDown 0.2s ease-in-out;
+      }
+    }
+  }
+}
+
+// Keyframes for each direction
+@keyframes moveLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px) translateY(-50%); // start shifted left
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(-50%); // end at normal position
+  }
+}
+
+@keyframes moveRight {
+  from {
+    opacity: 0;
+    transform: translateX(10px) translateY(-50%); // start shifted right
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(-50%); // end at normal position
+  }
+}
+
+@keyframes moveUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) translateX(-50%); // start shifted down
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%); // end at normal position
+  }
+}
+
+@keyframes moveDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) translateX(-50%); // start shifted up
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%); // end at normal position
+  }
+}
+//
+@keyframes scaleLeft {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0); // start shifted left
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1); // end at normal position translateY(-50%); // end at normal position
+  }
+}
+
+@keyframes scaleRight {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0); // start shifted right
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1); // end at normal position translateY(-50%); // end at normal position
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0); // start shifted down
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1); // end at normal position translateX(-50%); // end at normal position
+  }
+}
+
+@keyframes scaleDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0); // start shifted up
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1); // end at normal position translateX(-50%); // end at normal position
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

@@ -1,0 +1,84 @@
+.info {
+  .username {
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    .status {
+      font-size: 8px;
+      font-weight: 400;
+      font-style: normal;
+      margin: 5px;
+      border-radius: 5px;
+      padding: 3px;
+      &.online {
+        background-color: #097;
+        color: #fff;
+      }
+      &.offline {
+        background-color: #ff0000;
+        color: #fff;
+      }
+    }
+  }
+  .email {
+    font-size: 12px;
+    font-weight: 400;
+    font-style: normal;
+    color: #757575;
+  }
+}
+
+.con {
+  .title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  .export {
+    font-size: 12px;
+    font-weight: 400;
+    font-style: normal;
+    color: #757575;
+  }
+}
+
+.export {
+  .status {
+    font-size: 12px;
+    font-weight: 400;
+    font-style: normal;
+    color: #757575;
+    &.online {
+      color: #097;
+    }
+    &.offline {
+      color: #757575;
+    }
+  }
+  .switch {
+    width: 30px;
+    height: 15px;
+    background-color: #e0e0e0;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    &.online {
+      background-color: #097;
+    }
+    .circle {
+      width: 10px;
+      height: 10px;
+      background-color: #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 2px;
+      transform: translate(0, -50%);
+      transition: all 0.2s ease-in-out;
+      border: 1px solid #e0e0e0;
+      &.isOnline {
+        left: 17px;
+        border: 1px solid #097;
+      }
+    }
+  }
+}

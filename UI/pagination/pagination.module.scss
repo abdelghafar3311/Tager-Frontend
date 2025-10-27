@@ -1,0 +1,26 @@
+.containerPagination {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & .pageItem {
+      padding: 2px;
+    }
+    & .pageLink {
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+    & .active {
+      background-color: #097;
+      color: #fff;
+    }
+  }
+}

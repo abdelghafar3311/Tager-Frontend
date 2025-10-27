@@ -1,0 +1,53 @@
+// colors alarm
+$alarm-error-bg: #fef2f2;
+$alarm-error-color: #b91c1c;
+$alarm-error-border: 1px solid #fca5a5;
+
+$alarm-warning-bg: #fffbeb;
+$alarm-warning-color: #b45309;
+$alarm-warning-border: 1px solid #fcd34d;
+
+$alarm-info-bg: #eff6ff;
+$alarm-info-color: #1d4ed8;
+$alarm-info-border: 1px solid #93c5fd;
+
+$alarm-success-bg: #f0fdf4;
+$alarm-success-color: #15803d;
+$alarm-success-border: 1px solid #86efac;
+
+.containerAlarm {
+  padding: 7px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  &.error {
+    background-color: $alarm-error-bg;
+    color: $alarm-error-color;
+    border: $alarm-error-border;
+  }
+  &.warning {
+    background-color: $alarm-warning-bg;
+    color: $alarm-warning-color;
+    border: $alarm-warning-border;
+  }
+  &.info {
+    background-color: $alarm-info-bg;
+    color: $alarm-info-color;
+    border: $alarm-info-border;
+  }
+  &.success {
+    background-color: $alarm-success-bg;
+    color: $alarm-success-color;
+    border: $alarm-success-border;
+  }
+  & .headerAlarm {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    & h1 {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+}

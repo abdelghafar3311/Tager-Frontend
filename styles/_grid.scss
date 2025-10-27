@@ -1,0 +1,18 @@
+@function percent($num, $max) {
+  @return $num / $max * 100%;
+}
+
+$grid-cols: 12;
+
+@mixin grid($numCols: 12) {
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  @for $i from 1 through $grid-cols {
+    .col-#{$i} {
+      flex: 0 0 auto;
+      width: percent($i, $grid-cols);
+    }
+  }
+}

@@ -1,0 +1,37 @@
+.Sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  //   overflow: hidden;
+  padding-block: 10px;
+  color: #757575;
+  .Divs {
+    width: 100%;
+  }
+  .Link {
+    display: flex;
+    align-items: center;
+    gap: 3;
+    padding: 10px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    &.active {
+      background-color: #097;
+      color: #fff;
+    }
+    .icon {
+      font-size: 24px;
+    }
+    span {
+      font-size: 16;
+    }
+    &:hover {
+      background-color: #097;
+      color: #fff;
+    }
+    &.logout:hover {
+      background-color: #be0019;
+      color: #fff;
+    }
+  }
+}

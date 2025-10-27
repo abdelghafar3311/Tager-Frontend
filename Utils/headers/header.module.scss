@@ -1,9 +1,11 @@
 .header {
+  position: relative;
+  z-index: 999;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px;
-  border-bottom: 1px solid #64dea7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   .Logo {
     display: flex;
     align-items: center;
@@ -22,6 +24,81 @@
     cursor: pointer;
     span {
       font-size: 16;
+    }
+  }
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+
+  .img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: relative;
+    img {
+      width: 80%;
+      height: 80%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .dot {
+      position: absolute;
+      top: 3px;
+      right: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      opacity: 1;
+      transition: all 0.2s ease-in-out;
+      &.online {
+        background: #097;
+      }
+      &.offline {
+        background: #6e6b6c;
+      }
+    }
+  }
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 0px;
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+    .name {
+      font-size: 10px;
+      font-weight: bold;
+      display: flex;
+      // gap: 3px;
+      align-items: center;
+    }
+    .type {
+      font-size: 8px;
+      color: #097;
+    }
+    .status {
+      font-size: 8px;
+      background: #a5a5a5;
+      color: #fff;
+      padding: 2px 5px;
+      border-radius: 5px;
+      display: inline-block;
+      &.online {
+        background: #097;
+      }
+      &.offline {
+        background: #c50223;
+      }
+    }
+  }
+  &:hover {
+    .info {
+      width: 90px;
+      opacity: 1;
     }
   }
 }

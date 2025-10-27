@@ -1,0 +1,55 @@
+.inp {
+  display: flex;
+  align-items: center;
+  border: 1px solid #c3ccc8;
+  border-radius: 5px;
+  padding: 5px 10px;
+  gap: 7px;
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+  & span {
+    display: inline-block;
+    padding: 5px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ccc;
+    transition: all 0.2s ease-in-out;
+  }
+  & input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    width: calc(100% - 20px);
+  }
+  & textarea {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    width: calc(100% - 20px);
+    padding: 5px;
+    height: 120px;
+  }
+  &:focus-within {
+    border-color: #097;
+    span {
+      color: rgba(0, 153, 120, 0.39);
+    }
+  }
+}
+
+.msg {
+  font-size: 14px;
+  color: #f00;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  margin-left: 10px;
+  transition: all 0.2s ease-in-out;
+  &.error {
+    color: #f00;
+  }
+  &.warning {
+    color: rgb(202, 166, 7);
+  }
+}

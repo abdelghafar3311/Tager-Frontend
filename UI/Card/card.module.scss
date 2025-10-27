@@ -1,0 +1,25 @@
+.card {
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-self: center;
+  align-items: center;
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  & .icon {
+    font-size: 32px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+  & .title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
