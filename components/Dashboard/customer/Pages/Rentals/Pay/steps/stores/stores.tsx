@@ -41,6 +41,12 @@ interface DataFetch {
 
 }
 
+interface storeData {
+    Discount: number;
+    price: number;
+    relPrice: number;
+}
+
 export default function SoresSelect() {
     const { setStepName, setProgress, setData } = usePayContext();
 
@@ -61,7 +67,7 @@ export default function SoresSelect() {
                     token: `${getCookie("token")}`
                 }
             });
-            const modifiedRooms = res.data.rooms.map((store: any) => ({
+            const modifiedRooms = res.data.rooms.map((store: storeData) => ({
                 ...store,
                 relPrice:
                     store.Discount > 5 && store.Discount < store.price

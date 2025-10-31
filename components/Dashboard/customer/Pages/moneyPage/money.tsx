@@ -14,6 +14,7 @@ import Btn from "@/UI/BTN/Btn"
 import Modal from "@/UI/Modal/modal";
 import Inp from "@/UI/input/Inp";
 import Alarm from "@/UI/Alarm/alarm";
+import SecurityTab from "@/UI/Security tab/security";
 // component loader
 import LoadingDashScreen from "@/components/loading-com/dash-load";
 // notification
@@ -270,7 +271,7 @@ export default function MoneyComponent() {
                     <Inp type="number" icon={"$"} placeholder="Edit Your Money" value={EditMoney.money.toString()} onChange={(e) => setEditMoney({ ...EditMoney, money: +e.target.value })} msg={EditMoney.errorType ? { case: "error", msg: EditMoney.errorMsg } : { case: "", msg: "" }} />
                 </div>
             </Modal>
-            <Modal
+            {/* <Modal
                 openState={{ isOpen: modalClearSells, setIsOpen: setModalClearSells }}
                 header={{ title: "Clear Sells", isClose: true }}
                 footer={{ isClose: false, btn: <Btn BtnStatus="alarm" isLoading={LoadingSells} onClick={clearSellsHandler}>Clear</Btn> }}
@@ -279,8 +280,9 @@ export default function MoneyComponent() {
                 <Alarm type="error">
                     Do you sure want to clear sells data
                 </Alarm>
-            </Modal>
-            <Modal
+            </Modal> */}
+            <SecurityTab ACTIONS={"fun"} TitleAction="Clear Sells" Fun={clearSellsHandler} openState={{ isOpen: modalClearSells, setIsOpen: setModalClearSells }} role={"customer"} />
+            {/* <Modal
                 openState={{ isOpen: modalClearBuys, setIsOpen: setModalClearBuys }}
                 header={{ title: "Clear Buys", isClose: true }}
                 footer={{ isClose: false, btn: <Btn BtnStatus="alarm" isLoading={LoadingBuys} onClick={clearBuysHandler}>Clear</Btn> }}
@@ -289,7 +291,8 @@ export default function MoneyComponent() {
                 <Alarm type="error">
                     Do you sure want to clear buys data
                 </Alarm>
-            </Modal>
+            </Modal> */}
+            <SecurityTab ACTIONS={"fun"} TitleAction="Clear Buys" Fun={clearBuysHandler} openState={{ isOpen: modalClearBuys, setIsOpen: setModalClearBuys }} role={"customer"} />
         </div>
     )
 }

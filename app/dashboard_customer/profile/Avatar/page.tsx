@@ -53,6 +53,7 @@ export default function EditAvatarProfile() {
                 isToken={true}
                 token={token}
                 mainImage={image}
+                role="customer"
             />
         </div>
     );

@@ -109,7 +109,8 @@ export default function FormEditProfile({ role = "customer" }: Props) {
                 address: data.profile.address,
                 description: data.profile.description,
                 avatar: data.profile.avatar,
-                isProfile: true
+                isProfile: true,
+                isCached: true
             }))
             router.push(role === "customer" ? "/dashboard_customer/profile" : "/owner_dashboard/profile");
         } catch (error) {

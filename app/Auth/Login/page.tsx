@@ -1,5 +1,4 @@
 import FormLogin from "@/components/Login/form"
-import Link from "next/link"
 import Image from "next/image"
 export default function Login() {
     return (
@@ -9,9 +8,6 @@ export default function Login() {
                 <h1 className="text-3xl text-[#097]">Login</h1>
             </div>
             <FormLogin />
-            <Link href="/" className="text-[#097] mt-8">
-                Forget Password
-            </Link>
         </div>
     )
 }

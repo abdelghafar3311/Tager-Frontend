@@ -17,10 +17,14 @@ import Card from "@/UI/Card/Card";
 import Table from "@/UI/Table/Table";
 import LoadingDashScreen from "@/components/loading-com/dash-load";
 import Pagination from "@/UI/pagination/pagination";
-import Modal from "@/UI/Modal/modal";
+// import Modal from "@/UI/Modal/modal";
+import SecurityTab from "@/UI/Security tab/security";
 
 import { MdDelete, MdDeleteForever } from "react-icons/md";
-import Btn from "@/UI/BTN/Btn";
+
+// redux
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
+import { setRentals, setIsCachingUpdate } from "@/Redux/slices/owner/rentals";
 
 interface Rental {
     _id: string;
@@ -38,10 +42,11 @@ interface Rental {
 
 export default function Rentals() {
     const [typeShow, setTypeShow] = useState("cards");
-
+    // redux
+    const dispatch = useAppDispatch();
+    const { rentals, isCachingUpdate } = useAppSelector(state => state.rentalsOwner);
     // loading page
     const [loading, setLoading] = useState(true);
-    const [rentals, setRentals] = useState<Rental[]>([]);
 
     // search data
     const [search, setSearch] = useState<string>("");
@@ -74,8 +79,8 @@ export default function Rentals() {
                 }
             });
             const data = await response.data;
-            setRentals(data);
-            console.log("rentals: ", data);
+            dispatch(setRentals(data));
+            dispatch(setIsCachingUpdate(true));
             setLoading(false);
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -84,7 +89,7 @@ export default function Rentals() {
         }
     }
 
-    const useSearchKey = (
+    const highlightSearchKey = (
         text: string,
         keywords: string
     ): React.ReactNode[] => {
@@ -142,7 +147,12 @@ export default function Rentals() {
     }, [search])
 
     useEffect(() => {
-        GetRentals();
+        if (!isCachingUpdate) {
+            GetRentals();
+        }
+        if (isCachingUpdate) {
+            setLoading(false);
+        }
     }, [])
 
     if (loading) {
@@ -188,7 +198,7 @@ export default function Rentals() {
                                             <Card key={item._id} ClassName="flex items-start justify-start">
                                                 <div className="w-full">
                                                     <div className="flex items-center justify-between">
-                                                        <h1 className="font-bold text-2xl">{useSearchKey(item.Room_Id.nameRoom, search)}</h1>
+                                                        <h1 className="font-bold text-2xl">{highlightSearchKey(item.Room_Id.nameRoom, search)}</h1>
                                                         <div className="flex flex-row gap-2 items-center">
                                                             {!item.isDeleted && <span className="p-[5px] flex justify-center items-center rounded-full border border-red-400 text-red-400 cursor-pointer" onClick={() => openModal(item._id)}><MdDelete /></span>}
                                                             {item.isDeleted && <span className="p-[5px] flex justify-center items-center rounded-full border border-bule-400 text-blue-400 cursor-pointer" onClick={() => DeleteRental(item._id, false)}><MdDeleteForever /></span>}
@@ -264,7 +274,7 @@ export default function Rentals() {
                                         <tbody>
                                             {items.map((item: Rental) => (
                                                 <tr key={item._id}>
-                                                    <td>{useSearchKey(item.Room_Id.nameRoom, search)}</td>
+                                                    <td>{highlightSearchKey(item.Room_Id.nameRoom, search)}</td>
                                                     <td>{item.Customer_Id.username}</td>
                                                     <td>{item.Room_Id.NumberRoom}</td>
                                                     <td>{item.endDate}</td>
@@ -410,9 +420,16 @@ export default function Rentals() {
                 </>
             )}
 
-            <Modal openState={{ isOpen: showModal, setIsOpen: setShowModal }} header={{ title: "Delete Rental", isClose: true }} footer={{ btn: <Btn BtnStatus="alarm" onClick={() => DeleteRental(id, true)} isLoading={loadingBtn}>Active Delete</Btn> }}>
+            {/* <Modal openState={{ isOpen: showModal, setIsOpen: setShowModal }} header={{ title: "Delete Rental", isClose: true }} footer={{ btn: <Btn BtnStatus="alarm" onClick={() => DeleteRental(id, true)} isLoading={loadingBtn}>Active Delete</Btn> }}>
                 Do you sure want to delete this Rental
-            </Modal>
+            </Modal> */}
+            <SecurityTab
+                openState={{ isOpen: showModal, setIsOpen: setShowModal }}
+                role="owner"
+                ACTIONS="fun"
+                Fun={() => DeleteRental(id, true)}
+                TitleAction="Delete Rental"
+            />
         </div>
     )
 }

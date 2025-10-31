@@ -1,17 +1,31 @@
 "use client"
+import { useState } from "react";
 import { useRef } from "react";
 import { useAvatarContext } from "../../context/context";
-
+import { useRouter } from "next/navigation";
 import Btn from "@/UI/BTN/Btn"
 import Content from "@/components/Dashbpoard Tools/ContentStyle/content";
 // icons
-import { MdEdit, MdUpload } from "react-icons/md";
+import { MdEdit, MdUpload, MdDelete } from "react-icons/md";
+
+// axios
+import axios, { AxiosError } from "axios";
+// cookies
+import { getCookie } from "cookies-next";
+// routes
+import { CustomerRoutes, OwnerRoutes } from "@/config/routes";
 
 import notification from "@/hooks/useNotifications";
 
 export default function Home() {
-    const { setStepName, setUploadImage, mainImage } = useAvatarContext();
+    const router = useRouter();
+    const { setStepName, setUploadImage, mainImage, role } = useAvatarContext();
     const ref = useRef<HTMLInputElement>(null);
+
+    // make url delete image
+    const urlDelete = role === "customer" ? CustomerRoutes.profile.avatar.delete : OwnerRoutes.profile.avatar.delete
+    const [load, setLoad] = useState(false);
+
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -32,6 +46,32 @@ export default function Home() {
         setStepName("crop");
     }
 
+    const DeleteAction = async () => {
+        if (load) return;
+        setLoad(true);
+        console.log(role);
+        try {
+            const token = getCookie("token");
+            const response = await axios.delete(urlDelete, {
+                headers: {
+                    token: `${token}`,
+                },
+            });
+            const data = await response.data;
+            notification(data.message, "success");
+            router.back();
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                notification(error.response?.data.message, "error");
+            }
+            console.log(error);
+        } finally {
+            setLoad(false);
+        }
+    }
+
+
+
     return (
         <Content>
             <h1 className="text-3xl font-extrabold text-center mb-4">Your Avatar</h1>
@@ -45,12 +85,16 @@ export default function Home() {
                     <MdEdit />
                     <span>Edit</span>
                 </Btn>
+                <Btn BtnStatus="alarm" isLoading={load} onClick={DeleteAction}>
+                    <MdDelete />
+                    <span>Clear</span>
+                </Btn>
                 <Btn isLight onClick={() => ref.current?.click()}>
                     <MdUpload />
                     <span>Change</span>
                 </Btn>
                 <input ref={ref} onChange={handleImageChange} type="file" name="avatar" className="hidden" />
-                <Btn BtnStatus="warning">
+                <Btn BtnStatus="warning" onClick={() => router.back()}>
                     Cancel
                 </Btn>
             </div>

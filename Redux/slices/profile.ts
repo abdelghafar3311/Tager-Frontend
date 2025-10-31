@@ -7,7 +7,8 @@ interface ProfileState {
   description?: string;
   avatar?: string;
   status?: boolean;
-  isProfile: boolean;
+  isProfile: boolean | null;
+  isCached: boolean;
 }
 
 const initialState: ProfileState = {
@@ -16,8 +17,9 @@ const initialState: ProfileState = {
   address: "",
   description: "",
   avatar: "",
-  isProfile: false,
+  isProfile: null,
   status: true,
+  isCached: false,
 };
 
 const profileSlice = createSlice({
@@ -32,6 +34,7 @@ const profileSlice = createSlice({
       state.avatar = action.payload.avatar;
       state.status = action.payload.status;
       state.isProfile = action.payload.isProfile;
+      state.isCached = action.payload.isCached;
     },
     setStatus(state, action: PayloadAction<boolean>) {
       state.status = action.payload;

@@ -1,16 +1,17 @@
 "use client"
 // react
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // next
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+// security
+import { CheckForAllDetails } from "@/fetchData/secFetcher";
 // redux
 import { useAppSelector, useAppDispatch } from "@/hooks/reduxHooks";
 // styles
 import styles from "./header.module.scss";
 // fetch data
-import { GetProfile } from "@/fetchData/fetch";
-// icons
-import { IoNotificationsOutline } from "react-icons/io5";
+import { GetProfile, GetOwnerInfo } from "@/fetchData/fetch";
 // UI
 import Modal from "@/UI/Modal/modal";
 import Image from "next/image";
@@ -21,11 +22,27 @@ interface Props {
 }
 
 export default function DashHeader({ role }: Props) {
+    const router = useRouter();
     const dispatch = useAppDispatch();
     GetProfile(role, dispatch);
+
     const [show, setShow] = useState(false);
     const { status, avatar, name, isProfile } = useAppSelector((state) => state.profile);
     const { money } = useAppSelector((state) => state.customer);
+    const { money: ownerMoney } = useAppSelector((state) => state.ownerInfo);
+    // GetProfile(role, dispatch)
+    // role === "owner" && GetOwnerInfo(dispatch)
+    useEffect(() => {
+        Promise.all([
+            GetProfile(role, dispatch),
+            role === "owner" && GetOwnerInfo(dispatch)
+        ]);
+    }, []);
+
+    useEffect(() => {
+        if (isProfile === null) return;
+        if (isProfile === false) router.push("/create_profile");
+    }, [isProfile]);
     return (
         <div className={styles.header}>
             <div className={styles.Logo}>
@@ -39,6 +56,9 @@ export default function DashHeader({ role }: Props) {
                     {role === "customer" && <Link href={"/dashboard_customer/money"} className="text-xl text-slate-600 cursor-pointer">
                         <span>${money}</span>
                     </Link>}
+                    {role === "owner" && <p className="text-xl text-slate-600">
+                        <span>${ownerMoney}</span>
+                    </p>}
                     <div className={styles.profile}>
                         <div className={styles.img} onClick={() => setShow(true)}>
                             <Image src={avatar || ""} alt="profile" width={40} height={40} />
@@ -46,7 +66,7 @@ export default function DashHeader({ role }: Props) {
                         </div>
                         <div className={styles.info}>
                             <h3 className={styles.name}>
-                                <span>{name}</span>
+                                <span className="truncate w-[80px]">{name}</span>
                             </h3>
                             <i className={styles.type}>{role}</i>
                         </div>
@@ -55,7 +75,7 @@ export default function DashHeader({ role }: Props) {
             )}
             {!isProfile && (
                 <div className={styles.profile}>
-                    <span className={styles.name}>Sorry to use system, please create <Link href={role === "customer" ? "/dashboard_customer/profile/create" : "/owner_dashboard/profile/create"} className="text-blue-500">profile</Link></span>
+                    <span className={styles.name}>Sorry to use system, please create <Link href={"/create_profile"} className="text-blue-500">profile</Link></span>
                 </div>
             )}
 

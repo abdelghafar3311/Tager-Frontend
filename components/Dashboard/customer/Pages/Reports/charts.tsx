@@ -1,7 +1,6 @@
 "use client";
 
 import Alarm from "@/UI/Alarm/alarm";
-
 import { useCallback, useState, useMemo } from "react";
 import {
     AreaChart,
@@ -12,13 +11,18 @@ import {
     Tooltip,
     ReferenceArea,
     ResponsiveContainer,
+
 } from "recharts";
 
-type Report = {
-    report_for: "buys" | "sells";
+interface ReportData {
+    _id: string;
+    report_for: "sells" | "buys";
     money_push: number;
+    customer_id: string;
+    product_id: string;
     createdAt: string;
-};
+}
+
 
 const initialState = {
     left: "dataMin",
@@ -28,7 +32,7 @@ const initialState = {
     animation: true,
 };
 
-const HighlightAndZoomLineChart = ({ reports }: { reports: Report[] }) => {
+const HighlightAndZoomLineChart = ({ reports }: { reports: ReportData[] }) => {
     const [zoomGraph, setZoomGraph] = useState(initialState);
 
     const chartData = useMemo(() => {
@@ -53,7 +57,8 @@ const HighlightAndZoomLineChart = ({ reports }: { reports: Report[] }) => {
     }, [reports]);
 
     const zoom = useCallback(() => {
-        setZoomGraph((prev: any) => {
+        // @ts-expect-error
+        setZoomGraph((prev) => {
             let { refAreaLeft, refAreaRight } = prev;
             if (!refAreaLeft || !refAreaRight || refAreaLeft === refAreaRight)
                 return { ...prev, refAreaLeft: undefined, refAreaRight: undefined };
@@ -68,14 +73,15 @@ const HighlightAndZoomLineChart = ({ reports }: { reports: Report[] }) => {
             };
         });
     }, []);
-
-    const onMouseDown = useCallback((e: any) => {
+    // @ts-expect-error
+    const onMouseDown = useCallback((e) => {
         if (e?.activeLabel)
             setZoomGraph((prev) => ({ ...prev, refAreaLeft: e.activeLabel }));
     }, []);
 
     const onMouseMove = useCallback(
-        (e: any) => {
+        // @ts-expect-error
+        (e) => {
             if (e?.activeLabel && zoomGraph.refAreaLeft)
                 setZoomGraph((prev) => ({ ...prev, refAreaRight: e.activeLabel }));
         },

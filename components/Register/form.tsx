@@ -87,10 +87,11 @@ export default function FormRegister({ formFor }: Props) {
                 username: response.data.username,
                 email: response.data.email,
                 id: response.data.id,
+                role: formFor
             }));
 
             notification("Account created successfully", "success");
-            formFor === "customer" ? router.push("/dashboard_customer") : router.push("/owner_dashboard")
+            router.push("/create_profile")
 
         } catch (error) {
             const err = error as AxiosError<{ message: string }>;
@@ -101,29 +102,14 @@ export default function FormRegister({ formFor }: Props) {
         }
     }
 
-    const handleGoogle = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (isLoading) return notification("Please wait, we are processing your request", "info");
-        notification("This feature is not available yet", "info")
-    }
-
     return (
         <div className="w-[90%] lg:w-[50%] md:w-[50%] flex flex-col gap-4">
             <form className="flex flex-col gap-4 w-[100%]" onSubmit={handleForm}>
-                <Inp icon={<FaUser />} placeholder="Username" name="username" isRequired onChange={(e) => pushData(e.target.name, e.target.value)} />
+                <Inp icon={<FaUser />} placeholder="Username" name="username" isRequired onChange={(e) => pushData(e.target.name, e.target.value.replace(/\s+/g, '_'))} />
                 <Inp icon={<MdEmail />} type="email" placeholder="Email" name="email" isRequired onChange={(e) => pushData(e.target.name, e.target.value)} />
                 <Inp icon={<RiLockPasswordFill />} type="password" min={6} max={32} name="password" placeholder="Password" isRequired onChange={(e) => pushData(e.target.name, e.target.value)} />
                 <Inp icon={<RiLockPasswordFill />} type="password" name="confirmPassword" placeholder="Confirm Password" msg={checkPass().error ? { case: checkPass().case, msg: checkPass().msg } : { case: "", msg: "" }} isRequired onChange={(e) => pushData(e.target.name, e.target.value)} />
                 <Btn className="w-full" isDisabled={checkPass().error} isLight isLoading={isLoading}>Sign Up</Btn>
-
-            </form>
-            <form onSubmit={handleGoogle}>
-                <button
-                    className="flex items-center justify-center gap-4 w-full py-3 border border-[#000] rounded-md cursor-pointer"
-                >
-                    <Image src="/images/google.png" alt="google" width={24} height={24} />
-                    <span>Sign Up With Google</span>
-                </button>
             </form>
         </div>
 

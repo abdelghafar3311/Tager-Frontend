@@ -12,6 +12,8 @@ import { GetCustomer } from "@/fetchData/fetch";
 import { useAppSelector, useAppDispatch } from "@/hooks/reduxHooks";
 // cookies
 import { getCookie } from "cookies-next";
+// update cache of product 
+import { updateProductsCache } from "@/cache/updateCaching";
 
 import Content from "@/components/Dashbpoard Tools/ContentStyle/content"
 import Inp from "@/UI/input/Inp"
@@ -28,6 +30,27 @@ import LoadingDashScreen from "@/components/loading-com/dash-load";
 
 import { RentalRoutes, BuysRoutes } from "@/config/routes";
 
+interface rentals {
+    _id: string;
+    Room_Id: {
+        _id: string;
+        nameRoom: string;
+    };
+    subscriptionState: string;
+}
+
+interface IProduct {
+    nameProduct: string;
+    category: string;
+    count: number;
+    price: number;
+    taxes: number;
+    ads: number;
+    gain: number;
+    discount: number;
+    Rental_Id: string;
+}
+
 export default function AddProducts() {
     const dispatch = useAppDispatch();
     const { money } = useAppSelector((state) => state.customer);
@@ -37,7 +60,7 @@ export default function AddProducts() {
     // load btn
     const [loadingBtn, setLoadingBtn] = useState<boolean>(false);
     // rentals
-    const [rentals, setRentals] = useState<any[]>([]);
+    const [rentals, setRentals] = useState<rentals[]>([]);
 
     // catch error money
     const [error, setError] = useState<{
@@ -49,7 +72,7 @@ export default function AddProducts() {
     });
 
     const [limit, setLimit] = useState(1);
-    const [localData, setLocalData] = useState<any[]>([]);
+    const [localData, setLocalData] = useState<IProduct[]>([]);
 
 
     // fetch Rentals
@@ -64,7 +87,7 @@ export default function AddProducts() {
             });
             await GetCustomer(dispatch);
             const dataBase = await response.data;
-            setRentals(dataBase.rentals.filter((item: any) => item.subscriptionState === "active"));
+            setRentals(dataBase.rentals.filter((item: rentals) => item.subscriptionState === "active"));
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
             console.log(err);
@@ -81,19 +104,29 @@ export default function AddProducts() {
 
     // create data
     function createData() {
-        const a = [];
-        let d = {};
+        const a: IProduct[] = [];
+        let d: IProduct = {
+            nameProduct: "",
+            category: "",
+            count: 0,
+            price: 0,
+            taxes: 0,
+            ads: 0,
+            gain: 0,
+            discount: 0,
+            Rental_Id: "",
+        };
         // here loop in limit to create data
         for (let i = 0; i < limit; i++) {
             d = {
                 nameProduct: "",
                 category: "",
-                count: "",
-                price: "",
-                taxes: "",
-                ads: "",
-                gain: "",
-                discount: "",
+                count: 0,
+                price: 0,
+                taxes: 0,
+                ads: 0,
+                gain: 0,
+                discount: 0,
                 Rental_Id: "",
             };
             a.push(d);
@@ -156,6 +189,7 @@ export default function AddProducts() {
                 },
             });
             const data = await response.data;
+            await updateProductsCache(dispatch);
             notification(data.message, "success");
             router.push("/dashboard_customer/product")
 
@@ -172,7 +206,7 @@ export default function AddProducts() {
     useEffect(() => {
         BuysAllProductsLocal();
         localData.map(item => {
-            if (item.count === "" || item.count === undefined || +item.count <= 0) {
+            if (item.count === undefined || +item.count <= 0) {
                 return setError({
                     errorType: true,
                     errorMsg: "Please enter the count of the product"
@@ -353,7 +387,7 @@ export default function AddProducts() {
                                                 <SelectValue placeholder="Select Store" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {rentals.map((rental: any) => (
+                                                {rentals.map((rental: rentals) => (
                                                     <SelectItem key={rental._id} value={rental._id}>
                                                         {rental.Room_Id.nameRoom}
                                                     </SelectItem>

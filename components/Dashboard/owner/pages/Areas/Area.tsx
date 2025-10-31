@@ -8,6 +8,7 @@ import Btn from "@/UI/BTN/Btn";
 import Alarm from "@/UI/Alarm/alarm";
 import Content from "@/components/Dashbpoard Tools/ContentStyle/content";
 import Table from "@/UI/Table/Table";
+import SecurityTab from "@/UI/Security tab/security";
 // icons
 import { FaPlus } from "react-icons/fa6";
 import { MdModeEditOutline, MdDelete, MdDeleteForever } from "react-icons/md";
@@ -25,18 +26,14 @@ import { AreaRoutes } from "@/config/routes";
 import { getCookie } from "cookies-next";
 // notification
 import notification from "@/hooks/useNotifications";
-
-interface dataGet {
-    nameArea: string,
-    address: string,
-    maxRooms: number,
-    _id: string,
-    status: boolean,
-    createdAt: string,
-    isDeleted: boolean
-}[]
+// Redux
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
+import { setArea, setIsCachingUpdate } from "@/Redux/slices/owner/area";
 
 export default function Area() {
+    // redux
+    const dispatch = useAppDispatch();
+    const { area, isCachingUpdate } = useAppSelector(state => state.areas);
     // states
     /// type show (table or cards)
     const [typeShow, setTypeShow] = useState<"cards" | "table">("cards");
@@ -46,8 +43,6 @@ export default function Area() {
     const [openDelete, setOpenDelete] = useState(false);
     // loading && security
     const [stopClick, setStopClick] = useState(false)
-    /// data
-    const [data, setData] = useState<dataGet[]>();
     /// id
     const [Id, setId] = useState("");
     const [IdDe, setIdDe] = useState("");
@@ -65,8 +60,8 @@ export default function Area() {
                 }
             });
             const data = await response.data;
-            console.log(data);
-            setData(data);
+            dispatch(setArea(data));
+            dispatch(setIsCachingUpdate(true))
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
             console.log(err);
@@ -78,15 +73,13 @@ export default function Area() {
         if (stopClick) return notification("Please wait, we are processing your request", "info");
         try {
             setStopClick(true)
-            const response = await axios.put(AreaRoutes.update(id), {
+            await axios.put(AreaRoutes.update(id), {
                 status: status
             }, {
                 headers: {
                     token: `${getCookie("token")}`
                 }
             });
-            const data = await response.data;
-            console.log("fetch: ", data)
             fetchData();
         } catch (error) {
             const err = error as AxiosError<{ message: string }>;
@@ -139,6 +132,13 @@ export default function Area() {
 
     }
     // useEffect
+
+    useEffect(() => {
+        if (!isCachingUpdate) {
+            fetchData();
+        }
+    }, [])
+
     useEffect(() => {
         fetchData();
     }, [open, openEdit])
@@ -163,12 +163,12 @@ export default function Area() {
                 </div>
             </div>
             {typeShow == "cards" && <div className="flex flex-col gap-2">
-                {data?.map(item => (
+                {area?.map(item => (
                     <>
                         <Card ClassName="flex items-start justify-start">
                             <div className="w-[100%] flex items-start justify-between gap-2">
                                 <div>
-                                    <h1 className="font-bold text-2xl flex items-start gap-1"><span className="flex items-center gap-0.5"><PiMapPinAreaBold /> {item.nameArea}</span> <span title={item.status ? "Click to Not Active" : "Click to Active"} className={`${item.status ? "bg-green-200 text-green-500" : "bg-red-200 text-red-500"} text-[10px] py-[3px] px-[4px] font-extralight rounded-full cursor-pointer`} onClick={() => handelStatus(item._id, !item.status)}>{item.status ? "Active" : "Not Active"}</span></h1>
+                                    <h1 className="font-bold text-2xl flex items-start gap-1"><span className="flex items-center gap-0.5"><PiMapPinAreaBold /> {item.nameArea}</span> <span title={item.status ? "Click to Not Active" : "Click to Active"} className={`${item.status ? "bg-green-200 text-black" : "bg-red-200 text-black"} text-[10px] py-[3px] px-[4px] font-extralight rounded-full cursor-pointer`} onClick={() => handelStatus(item._id, !item.status)}>{item.status ? "Active" : "Not Active"}</span></h1>
                                     <p className="mt-2 text-sm text-gray-500">Address: <span>{item.address}</span></p>                                    <p className="text-[12px] text-gray-500">Date: <span>{new Date(item.createdAt).toDateString()}</span></p>
                                 </div>
                                 <div className="flex flex-col md:flex-row gap-2 items-center">
@@ -180,7 +180,7 @@ export default function Area() {
                         </Card>
                     </>
                 ))}
-                {!data && <Alarm IconsShow={false} type="error">Not Found Areas</Alarm>}
+                {!area && <Alarm IconsShow={false} type="error">Not Found Areas</Alarm>}
             </div>}
             {typeShow == "table" &&
                 <Table>
@@ -194,12 +194,12 @@ export default function Area() {
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.map(item => (
+                        {area?.map(item => (
                             <tr key={item._id}>
                                 <td>{item.nameArea}</td>
                                 <td>{item.address}</td>
                                 <td>{new Date(item.createdAt).toDateString()}</td>
-                                <td><span title={item.status ? "Click to Not Active" : "Click to Active"} className={`${item.status ? "bg-green-200 text-green-500" : "bg-red-200 text-red-500"} text-[10px] py-[3px] px-[4px] font-extralight rounded-full cursor-pointer`} onClick={() => handelStatus(item._id, !item.status)}>{item.status ? "Active" : "Not Active"}</span></td>
+                                <td><span title={item.status ? "Click to Not Active" : "Click to Active"} className={`${item.status ? "bg-green-200 text-green-700" : "bg-red-200 text-red-700"} text-[10px] py-[3px] px-[4px] font-extralight rounded-full cursor-pointer`} onClick={() => handelStatus(item._id, !item.status)}>{item.status ? "Active" : "Not Active"}</span></td>
                                 <td className="flex flex-row gap-2 items-center">
                                     <span className="p-[5px] flex justify-center items-center rounded-full border border-green-400 text-green-400 cursor-pointer" onClick={() => { setId(item._id); setOpenEdit(true) }}><MdModeEditOutline /></span>
                                     {!item.isDeleted && <span className="p-[5px] flex justify-center items-center rounded-full border border-red-400 text-red-400 cursor-pointer" onClick={() => openAndTakeId(item._id)}><MdDelete /></span>}
@@ -207,7 +207,7 @@ export default function Area() {
                                 </td>
                             </tr>
                         ))}
-                        {!data && <tr><td colSpan={6} className="text-center">Not Found Areas</td></tr>}
+                        {!area && <tr><td colSpan={6} className="text-center">Not Found Areas</td></tr>}
                     </tbody>
                 </Table>
             }
@@ -215,12 +215,28 @@ export default function Area() {
             <Modal openState={{ isOpen: open, setIsOpen: setOpen }} header={{ title: "Add Area", isClose: true }}>
                 <FormAddBuilder setClose={setOpen} />
             </Modal>
-            <Modal openState={{ isOpen: openEdit, setIsOpen: setOpenEdit }} header={{ title: "Edit Area", isClose: true }}>
+            {/* <Modal openState={{ isOpen: openEdit, setIsOpen: setOpenEdit }} header={{ title: "Edit Area", isClose: true }}>
                 <FormEditBuilder id={Id} setClose={setOpenEdit} />
-            </Modal>
-            <Modal openState={{ isOpen: openDelete, setIsOpen: setOpenDelete }} header={{ title: "Delete Area", isClose: true }} footer={{ btn: <Btn BtnStatus="alarm" onClick={handelDelete} isLoading={stopClick}>Active Delete</Btn> }}>
+            </Modal> */}
+            <SecurityTab
+                openState={{ isOpen: openEdit, setIsOpen: setOpenEdit }}
+                role="owner"
+                ACTIONS="design"
+                TitleAction="Edit Area"
+            >
+                <FormEditBuilder id={Id} setClose={setOpenEdit} />
+            </SecurityTab>
+
+            {/* <Modal openState={{ isOpen: openDelete, setIsOpen: setOpenDelete }} header={{ title: "Delete Area", isClose: true }} footer={{ btn: <Btn BtnStatus="alarm" onClick={handelDelete} isLoading={stopClick}>Active Delete</Btn> }}>
                 Do you sure want to delete this area
-            </Modal>
+            </Modal> */}
+            <SecurityTab
+                openState={{ isOpen: openDelete, setIsOpen: setOpenDelete }}
+                ACTIONS={"fun"}
+                Fun={handelDelete}
+                role={"owner"}
+                TitleAction={"Delete Area"}
+            />
         </div>
     )
 }

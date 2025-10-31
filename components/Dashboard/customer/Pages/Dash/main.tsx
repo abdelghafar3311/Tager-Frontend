@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react";
-
+import { useRouter } from "next/navigation";
 import Card from "@/UI/Card/Card";
 import Content from "@/components/Dashbpoard Tools/ContentStyle/content";
 import LoadingDashScreen from "@/components/loading-com/dash-load";
@@ -13,20 +13,25 @@ import UserVisited from "./UsersVisit";
 
 import { GetProfile, GetCustomer } from "@/fetchData/fetch";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
+import { updateRentalCustomerCache, updateProductsCache, updateReportsCache } from "@/cache/updateCaching";
 
 
-import { fetcherProducts, fetcherRentals, fetcherReports } from "./fetchers";
 export default function CustomerDash() {
+    const router = useRouter();
     // redux
     const dispatch = useAppDispatch();
     const { money, sells, buys } = useAppSelector(state => state.customer);
+    const { isProfile } = useAppSelector(state => state.profile);
+    const { products, isCachingUpdate: productsIsCaching } = useAppSelector(state => state.products);
+    const { rentals, requests, isCachingUpdate: rentalsIsCaching } = useAppSelector(state => state.rentalsCustomer);
+    const { reports, isCachingUpdate: reportsIsCaching } = useAppSelector(state => state.reports);
 
     // LOAD DATA
     const [loading, setLoading] = useState(true);
     // state fetchers
-    const [Product, setProduct] = useState<[]>([]);
-    const [Reports, setReports] = useState<[]>([]);
-    const [ren, setRen] = useState<{ ReqRental: [], rentals: [] }>({ ReqRental: [], rentals: [] });
+    // const [Product, setProduct] = useState<[]>([]);
+    // const [Reports, setReports] = useState<[]>([]);
+    // const [ren, setRen] = useState<{ ReqRental: [], rentals: [] }>({ ReqRental: [], rentals: [] });
 
     const FetcherLoad = async () => {
         setLoading(true);
@@ -34,9 +39,9 @@ export default function CustomerDash() {
             await Promise.all([
                 GetCustomer(dispatch),
                 GetProfile("customer", dispatch),
-                fetcherProducts(setProduct),
-                fetcherRentals(setRen),
-                fetcherReports(setReports)
+                updateProductsCache(dispatch),
+                updateRentalCustomerCache(dispatch),
+                updateReportsCache(dispatch)
             ]);
         } catch (error) {
             console.log(error);
@@ -45,24 +50,22 @@ export default function CustomerDash() {
         }
     }
 
-    const Fetcher = async () => {
-        try {
-            await Promise.all([
-                GetCustomer(dispatch),
-                GetProfile("customer", dispatch),
-                fetcherProducts(setProduct),
-                fetcherRentals(setRen),
-                fetcherReports(setReports)
-            ]);
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     useEffect(() => {
-        FetcherLoad();
-        setInterval(Fetcher, 60000);
+        if (!(productsIsCaching && rentalsIsCaching && reportsIsCaching)) {
+            FetcherLoad();
+        }
+        if (productsIsCaching && rentalsIsCaching && reportsIsCaching) {
+            setLoading(false);
+        }
     }, []);
+
+    useEffect(() => {
+        if (isProfile === null) return;
+        if (isProfile === false) {
+            router.push("/create_profile");
+        }
+    }, [isProfile])
 
     if (loading) {
         return (
@@ -72,6 +75,13 @@ export default function CustomerDash() {
         )
     }
 
+    if (!isProfile) {
+        return (
+            <div className="h-screen flex justify-center items-center text-3xl">
+                Wait we redirecting you to create profile
+            </div>
+        )
+    }
     return (
         <div>
             <Content>
@@ -97,7 +107,7 @@ export default function CustomerDash() {
             <Content>
                 <p className="mb-4 text-md font-extrabold text-slate-400">Charts for Reports</p>
                 <div className="flex md:flex-row flex-col md:items-center md:justify-center gap-2">
-                    <ReportLineChart reports={Reports} />
+                    <ReportLineChart reports={reports} />
                     <ReportCircleCharts buys={buys} money={money} />
                 </div>
             </Content>
@@ -105,13 +115,13 @@ export default function CustomerDash() {
             <Content>
                 <div className="flex md:flex-row flex-col md:items-center md:justify-center gap-2">
                     <Card title="Count of Products" ClassName="md:w-[17rem] md:h-[5rem] bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" color={{ text: "#fff" }}>
-                        {Product.length}
+                        {products.length}
                     </Card>
                     <Card title="Store Rentals" ClassName="md:w-[17rem] md:h-[5rem] bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500" color={{ text: "#fff" }}>
-                        {ren.rentals.length}
+                        {rentals.length}
                     </Card>
                     <Card title="Store still Request Rental" ClassName="md:w-[17rem] md:h-[5rem] bg-gradient-to-r from-amber-400 via-orange-500 to-red-500" color={{ text: "#fff" }}>
-                        {ren.ReqRental.length}
+                        {requests.length}
                     </Card>
                 </div>
             </Content>

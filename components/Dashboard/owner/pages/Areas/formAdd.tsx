@@ -13,6 +13,10 @@ import { AreaRoutes } from "@/config/routes";
 import notification from "@/hooks/useNotifications";
 import { getCookie } from "cookies-next"
 
+// redux
+import { useAppDispatch } from "@/hooks/reduxHooks";
+import { updateAreaCache } from "@/cache/updateCaching";
+
 interface FormData {
     nameArea: string;
     Address: string;
@@ -30,6 +34,7 @@ interface Props {
 }
 
 export default function FormAddBuilder({ setClose }: Props) {
+    const dispatch = useAppDispatch();
     const [form, setForm] = useState<FormData>({
         nameArea: "",
         Address: "",
@@ -73,14 +78,15 @@ export default function FormAddBuilder({ setClose }: Props) {
             const response = await axios.post(AreaRoutes.create, {
                 nameArea: form.nameArea,
                 address: form.Address,
-                maxRooms: form.RoomNumber
+                maxRooms: +form.RoomNumber
             }, {
                 headers: {
                     token: `${getCookie("token")}`
                 }
             });
+            await response.data;
+            await updateAreaCache(dispatch);
             notification("Area added successfully", "success");
-            const data = (await response).data;
             setClose(false);
         } catch (error) {
             const err = error as AxiosError<{ message: string }>;

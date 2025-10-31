@@ -11,7 +11,8 @@ import { RentalRoutes } from "@/config/routes"
 import Card from "@/UI/Card/Card"
 import Alarm from "@/UI/Alarm/alarm";
 import LoadingDashScreen from "@/components/loading-com/dash-load"
-import Modal from "@/UI/Modal/modal"
+import Modal from "@/UI/Modal/modal";
+import SecurityTab from "@/UI/Security tab/security";
 // hooks
 import notification from "@/hooks/useNotifications"
 // icons
@@ -21,7 +22,10 @@ import { TbContract } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
 import Link from "next/link"
 import Btn from "@/UI/BTN/Btn"
-
+// Redux Rentals
+import { useAppSelector, useAppDispatch } from "@/hooks/reduxHooks"
+import { setRentals, setRequests, setIsCachingUpdate } from "@/Redux/slices/customer/rentals"
+import { GetCustomer } from "@/fetchData/fetch"
 interface Rental {
     _id: string;
     subscriptionState: string;
@@ -74,11 +78,16 @@ interface Request {
 
 
 export default function MainRentalPage() {
+
+    // redux
+    const dispatch = useAppDispatch();
+    const { rentals, requests, isCachingUpdate } = useAppSelector((state) => state.rentalsCustomer);
+
     const [renOrReq, setRenOrReq] = useState<"rentals" | "requests">("rentals");
     const [show, setShow] = useState<string>("all");
     const [reqShow, setReqShow] = useState<string>("all");
-    const [req, setReq] = useState<Request[]>([]);
-    const [rentals, setRental] = useState<Rental[]>([]);
+    // const [req, setReq] = useState<Request[]>([]);
+    // const [rentals, setRental] = useState<Rental[]>([]);
     const [loadReq, setLoadReq] = useState<boolean>(true);
 
     // modal update rental
@@ -135,11 +144,12 @@ export default function MainRentalPage() {
                 },
             });
             const data = await res.data;
-            setRental(data.rentals);
-            setReq(data.ReqRental);
+            dispatch(setRentals(data.rentals));
+            dispatch(setRequests(data.ReqRental));
+            dispatch(setIsCachingUpdate(true));
             setFilterReq(data.ReqRental);
             setFilterData(data.rentals);
-            console.log("rental data: ", data);
+            await GetCustomer(dispatch);
             setLoadReq(false);
         } catch (error) {
             setLoadReq(false);
@@ -215,18 +225,23 @@ export default function MainRentalPage() {
         }
 
         if (reqShow === "all") {
-            setFilterReq(req);
+            setFilterReq(requests);
         } else if (reqShow === "pending") {
-            const data = req.filter((item) => item.status === "pending");
+            const data = requests.filter((item) => item.status === "pending");
             setFilterReq(data);
         } else if (reqShow === "reject") {
-            const data = req.filter((item) => item.status === "reject");
+            const data = requests.filter((item) => item.status === "reject");
             setFilterReq(data);
         }
-    }, [show, reqShow, req, rentals, renOrReq])
+    }, [show, reqShow, requests, rentals, renOrReq])
 
     useEffect(() => {
-        getReqRentals();
+        if (!isCachingUpdate) {
+            getReqRentals();
+        }
+        if (isCachingUpdate) {
+            setLoadReq(false);
+        }
     }, [])
 
     if (loadReq) {
@@ -452,25 +467,16 @@ export default function MainRentalPage() {
                 <p className={`font-bold text-slate-600 mt-3 `}>Total : <span className={`font-bold ${(updateData.timeNumber * updateData.price > updateData.money ? "text-red-600" : "text-black")}`}>${updateData.price * updateData.timeNumber}</span></p>
             </Modal>
 
-
-            <Modal
+            <SecurityTab
+                ACTIONS="fun"
+                role="customer"
                 openState={{
                     isOpen: deleteModal,
                     setIsOpen: setDeleteModal,
                 }}
-                header={{
-                    title: "Delete Rental",
-                    isClose: true,
-                }}
-                footer={{
-                    isClose: false,
-                    btn: <Btn BtnStatus="alarm" isLoading={loadDelete} onClick={() => deleteRental()}>Delete</Btn>,
-                }}
-            >
-                <p>
-                    Are you sure you want to delete this Rental?
-                </p>
-            </Modal>
+                TitleAction="Delete Rental"
+                Fun={() => deleteRental()}
+            />
         </div>
     )
 }

@@ -34,12 +34,52 @@ import { FaPlus, FaAngleDoubleUp, FaEdit } from "react-icons/fa";
 import { CiAlignLeft, CiViewTable } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import Btn from "@/UI/BTN/Btn";
+// Redux product
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
+import { setProducts, setIsCachingUpdate } from "@/Redux/slices/customer/products";
+import { GetCustomer } from "@/fetchData/fetch";
+
+
+export interface IProduct {
+    _id: string;
+    nameProduct: string;
+    category: string;
+    count: number;
+    price: number;
+    taxes: number;
+    ads: number;
+    gain: number;
+    discount: number;
+    Rental_Id: {
+        _id: string;
+        subscriptionState: "active" | "inactive" | string;
+        isDeleted: boolean;
+        isAccept: "accept" | "reject" | "pending" | string;
+        Area_Id: string;
+        Room_Id: {
+            _id: string;
+            nameRoom: string;
+        };
+        Owner_Id: string;
+        Customer_Id: string;
+        startDate: string;
+        endDate: string;
+        expires: string;
+        pay: number;
+    };
+    createdAt: string;
+    updatedAt: string;
+}
+
 
 export default function MainProducts() {
     const [typeShow, setTypeShow] = useState("table");
+    // redux
+    const dispatch = useAppDispatch();
+    const { products, isCachingUpdate } = useAppSelector((state) => state.products);
     // loading page
     const [loadingPage, setLoadingPage] = useState<boolean>(true);
-    const [products, setProducts] = useState<any[]>([]);
+    // const [products, setProducts] = useState<IProduct[]>([]);
     // Modal status
     const [showModal, setShowModal] = useState<boolean>(false);
     const [msgModal, setMsgModal] = useState<{
@@ -65,7 +105,7 @@ export default function MainProducts() {
     // search data
     const [search, setSearch] = useState<string>("");
     // data after search
-    const [searchData, setSearchData] = useState<any[]>([]);
+    const [searchData, setSearchData] = useState<IProduct[]>([]);
 
 
     // search fun
@@ -107,9 +147,10 @@ export default function MainProducts() {
                 },
             });
             const data = await res.data;
-            setProducts(data);
+            dispatch(setProducts(data));
+            dispatch(setIsCachingUpdate(true));
             setSearchData(data);
-            console.log("products: ", data)
+            await GetCustomer(dispatch);
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
             console.log(err);
@@ -126,9 +167,10 @@ export default function MainProducts() {
                 },
             });
             const data = await res.data;
-            setProducts(data);
+            dispatch(setProducts(data));
+            dispatch(setIsCachingUpdate(true));
+            await GetCustomer(dispatch);
             setSearchData(data);
-            console.log("products: ", data)
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
             console.log(err);
@@ -198,8 +240,12 @@ export default function MainProducts() {
     }, [search])
 
     useEffect(() => {
-        getProducts();
-    }, []);
+        if (!isCachingUpdate) {
+            getProducts();
+        }
+        if (isCachingUpdate) setLoadingPage(false);
+        console.log("isCachingUpdate: ", isCachingUpdate);
+    }, [isCachingUpdate]);
 
     // loading
     if (loadingPage) {
@@ -237,11 +283,11 @@ export default function MainProducts() {
                 </div>
             </div>
             {searchData.length > 0 ? <Pagination data={searchData} itemsPerPage={10}>
-                {(items: any) => (
+                {(items: IProduct[]) => (
                     <>
                         {typeShow === "cards" && <div className="w-full flex flex-col xl:grid xl:grid-cols-2 2xl:grid-cols-3 gap-4">
-                            {items.map((item: any) => (
-                                <Card ClassName="xl:w-[30rem]">
+                            {items.map((item: IProduct) => (
+                                <Card key={item._id} ClassName="xl:w-[30rem]">
                                     <div className="w-full">
                                         <div className="flex justify-between items-center">
                                             <h3 className="text-2xl font-bold">{useSearchKey(item.nameProduct, search)}</h3>
@@ -310,8 +356,8 @@ export default function MainProducts() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {items.map((item: any) => (
-                                    <tr>
+                                {items.map((item: IProduct) => (
+                                    <tr key={item._id}>
                                         <td>{useSearchKey(item.nameProduct, search)}</td>
                                         <td>{item.category}</td>
                                         <td>{item.count}</td>
@@ -342,11 +388,11 @@ export default function MainProducts() {
                     </>
                 )}
             </Pagination> : <Pagination data={products} itemsPerPage={10}>
-                {(items: any) => (
+                {(items: IProduct[]) => (
                     <>
                         {typeShow === "cards" && <div className="w-full flex flex-col xl:grid xl:grid-cols-2 2xl:grid-cols-3 gap-4">
-                            {items.map((item: any) => (
-                                <Card ClassName="xl:w-[30rem]">
+                            {items.map((item: IProduct) => (
+                                <Card key={item._id} ClassName="xl:w-[30rem]">
                                     <div className="w-full">
                                         <div className="flex justify-between items-center">
                                             <h3 className="text-2xl font-bold">{item.nameProduct}</h3>
@@ -415,8 +461,8 @@ export default function MainProducts() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {items.map((item: any) => (
-                                    <tr>
+                                {items.map((item: IProduct) => (
+                                    <tr key={item._id}>
                                         <td>{item.nameProduct}</td>
                                         <td>{item.category}</td>
                                         <td>{item.count}</td>

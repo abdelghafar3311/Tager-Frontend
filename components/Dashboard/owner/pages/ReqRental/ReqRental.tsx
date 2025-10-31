@@ -5,7 +5,8 @@ import { useState, useEffect } from "react"
 import Content from "@/components/Dashbpoard Tools/ContentStyle/content"
 import Table from "@/UI/Table/Table";
 import Btn from "@/UI/BTN/Btn";
-import Modal from "@/UI/Modal/modal";
+// import Modal from "@/UI/Modal/modal";
+import SecurityTab from "@/UI/Security tab/security";
 import LoadingDashScreen from "@/components/loading-com/dash-load";
 // axios
 import axios, { AxiosError } from "axios";
@@ -20,7 +21,9 @@ import { CiAlignLeft, CiViewTable } from "react-icons/ci"
 import { IoMdRefresh } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
-
+// redux ReqRental
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
+import { setReqRental, setIsCachingUpdate } from "@/Redux/slices/owner/reqRentals";
 
 interface ReqRental {
     _id: string;
@@ -75,9 +78,11 @@ interface Requests {
 
 export default function ReqRental() {
     const [typeShow, setTypeShow] = useState("cards");
-
+    // redux
+    const dispatch = useAppDispatch();
+    const { reqRental, isCachingUpdate } = useAppSelector(state => state.reqRental);
     // state Req
-    const [reqRental, setReqRental] = useState<ReqRental[]>([]);
+    // const [reqRental, setReqRental] = useState<ReqRental[]>([]);
     // state modal
     const [showModal, setShowModal] = useState(false);
     const [showModalReject, setShowModalReject] = useState(false);
@@ -102,7 +107,8 @@ export default function ReqRental() {
             });
             const data = await response.data;
             console.log(data);
-            setReqRental(data);
+            dispatch(setReqRental(data));
+            dispatch(setIsCachingUpdate(true));
             setLoading(false)
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
@@ -170,7 +176,12 @@ export default function ReqRental() {
     }
 
     useEffect(() => {
-        fetchData();
+        if (!isCachingUpdate) {
+            fetchData();
+        }
+        if (isCachingUpdate) {
+            setLoading(false);
+        }
     }, []);
 
     if (loading) {
@@ -344,22 +355,22 @@ export default function ReqRental() {
             )}
 
 
-            <Modal
+
+            <SecurityTab
                 openState={{ isOpen: showModal, setIsOpen: setShowModal }}
-                header={{ title: "Accept For Rental", isClose: true }}
-                footer={{ btn: <Btn onClick={acceptReq} isLoading={loadingBtn}>Accept</Btn>, isClose: false }}
-            >
-                Do you sure accept for this customer?
-            </Modal>
+                role="owner"
+                ACTIONS="fun"
+                Fun={acceptReq}
+                TitleAction="Accept Request"
+            />
 
-            <Modal
+            <SecurityTab
                 openState={{ isOpen: showModalReject, setIsOpen: setShowModalReject }}
-                header={{ title: "Reject For Rental", isClose: true }}
-                footer={{ btn: <Btn onClick={rejectReq} isLoading={loadingBtn} BtnStatus="alarm">Reject</Btn>, isClose: false }}
-            >
-                Do you sure reject for this customer?
-            </Modal>
-
+                role="owner"
+                ACTIONS="fun"
+                Fun={rejectReq}
+                TitleAction="Reject Request"
+            />
         </div>
     )
 }

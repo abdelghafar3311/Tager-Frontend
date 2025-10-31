@@ -7,6 +7,7 @@ import Table from "@/UI/Table/Table";
 import Btn from "@/UI/BTN/Btn";
 import Pagination from "@/UI/pagination/pagination";
 import Modal from "@/UI/Modal/modal";
+import SecurityTab from "@/UI/Security tab/security";
 import LoadingDashScreen from "@/components/loading-com/dash-load";
 // charts
 import HighlightAndZoomLineChart from "./charts";
@@ -21,13 +22,31 @@ import { getCookie } from "cookies-next";
 import { ReportRoutes } from "@/config/routes";
 // notification
 import notification from "@/hooks/useNotifications";
+// redux reports
+import { useAppSelector, useAppDispatch } from "@/hooks/reduxHooks";
+import { setReports, setIsCachingUpdate } from "@/Redux/slices/customer/reports";
+import { GetCustomer } from "@/fetchData/fetch";
+
+
+interface ReportData {
+    _id: string;
+    report_for: "sells" | "buys";
+    money_push: number;
+    customer_id: string;
+    product_id: string;
+    createdAt: string;
+}
+
 
 
 export default function Reports() {
 
+    // redux
+    const dispatch = useAppDispatch();
+    const { reports, isCachingUpdate } = useAppSelector((state) => state.reports);
     // loading page
     const [loadingPage, setLoadingPage] = useState<boolean>(true);
-    const [reports, setReports] = useState<any[]>([]);
+    // const [reports, setReports] = useState<ReportData[]>([]);
 
     // modal
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -44,8 +63,9 @@ export default function Reports() {
                 },
             });
             const data = await res.data;
-            setReports(data);
-            console.log("reports: ", data)
+            dispatch(setReports(data));
+            dispatch(setIsCachingUpdate(true));
+            await GetCustomer(dispatch);
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
             console.log(err);
@@ -76,7 +96,10 @@ export default function Reports() {
     }
 
     useEffect(() => {
-        getReports();
+        if (!isCachingUpdate) {
+            getReports();
+        }
+        if (isCachingUpdate) setLoadingPage(false);
     }, [])
 
 
@@ -124,22 +147,10 @@ export default function Reports() {
                 )}
             </Pagination>
 
-            <Modal
-                openState={{
-                    isOpen: showModal,
-                    setIsOpen: setShowModal
-                }}
-                header={{
-                    title: "Clear Reports",
-                    isClose: true
-                }}
-                footer={{
-                    btn: <Btn BtnStatus="alarm" onClick={deleteReport} isLoading={loading}>Clear</Btn>,
-                    isClose: false
-                }}
-            >
-                Do you sure want to <b>Clear All Reports</b> from your data?
-            </Modal>
+            <SecurityTab ACTIONS={"fun"} TitleAction="Delete Reports" Fun={deleteReport} role="customer" openState={{
+                isOpen: showModal,
+                setIsOpen: setShowModal
+            }} />
         </div>
     )
 }

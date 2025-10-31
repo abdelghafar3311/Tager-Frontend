@@ -14,6 +14,9 @@ import { AreaRoutes } from "@/config/routes";
 // hook
 import notification from "@/hooks/useNotifications";
 import { getCookie } from "cookies-next"
+// redux
+import { useAppDispatch } from "@/hooks/reduxHooks";
+import { updateAreaCache } from "@/cache/updateCaching";
 
 interface FormData {
     nameArea: string;
@@ -31,6 +34,7 @@ interface Props {
 }
 
 export default function FormEditBuilder({ setClose, id }: Props) {
+    const dispatch = useAppDispatch();
     const router = useRouter();
     const [form, setForm] = useState<FormData>({
         nameArea: "",
@@ -93,6 +97,8 @@ export default function FormEditBuilder({ setClose, id }: Props) {
                     token: `${getCookie("token")}`
                 }
             });
+            await response.data;
+            await updateAreaCache(dispatch);
             notification("Area added successfully", "success");
             router.refresh();
             setClose(false);

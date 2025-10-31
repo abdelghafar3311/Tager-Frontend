@@ -1,6 +1,4 @@
 "use client";
-
-import Alarm from "@/UI/Alarm/alarm";
 import Card from "@/UI/Card/Card";
 
 import { useCallback, useState, useMemo } from "react";
@@ -8,7 +6,6 @@ import {
     AreaChart,
     Area,
     XAxis,
-    YAxis,
     CartesianGrid,
     Tooltip,
     ReferenceArea,
@@ -55,7 +52,8 @@ export default function ReportLineChart({ reports }: { reports: Report[] }) {
     }, [reports]);
 
     const zoom = useCallback(() => {
-        setZoomGraph((prev: any) => {
+        // @ts-expect-error
+        setZoomGraph((prev) => {
             let { refAreaLeft, refAreaRight } = prev;
             if (!refAreaLeft || !refAreaRight || refAreaLeft === refAreaRight)
                 return { ...prev, refAreaLeft: undefined, refAreaRight: undefined };
@@ -70,14 +68,15 @@ export default function ReportLineChart({ reports }: { reports: Report[] }) {
             };
         });
     }, []);
-
-    const onMouseDown = useCallback((e: any) => {
+    // @ts-expect-error
+    const onMouseDown = useCallback((e) => {
         if (e?.activeLabel)
             setZoomGraph((prev) => ({ ...prev, refAreaLeft: e.activeLabel }));
     }, []);
 
     const onMouseMove = useCallback(
-        (e: any) => {
+        // @ts-expect-error
+        (e) => {
             if (e?.activeLabel && zoomGraph.refAreaLeft)
                 setZoomGraph((prev) => ({ ...prev, refAreaRight: e.activeLabel }));
         },

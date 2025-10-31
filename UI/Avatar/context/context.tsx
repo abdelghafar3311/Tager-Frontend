@@ -13,7 +13,9 @@ interface AvatarContext {
     hasToken: boolean,
     setHasToken: React.Dispatch<React.SetStateAction<boolean>>,
     token?: string,
-    setToken: React.Dispatch<React.SetStateAction<string>>
+    setToken: React.Dispatch<React.SetStateAction<string>>,
+    role: "customer" | "owner",
+    setRole: React.Dispatch<React.SetStateAction<"customer" | "owner">>
 }
 
 const AvatarContext = createContext<AvatarContext | null>(null);
@@ -25,8 +27,9 @@ export const AvatarProvider = ({ children }: { children: ReactNode }) => {
     const [urlUpload, setUrlUpload] = useState<string>("");
     const [hasToken, setHasToken] = useState<boolean>(false);
     const [token, setToken] = useState("");
+    const [role, setRole] = useState<"customer" | "owner">("customer");
     return (
-        <AvatarContext.Provider value={{ stepName, setStepName, mainImage, setMainImage, UploadImage, setUploadImage, hasToken, setHasToken, urlUpload, setUrlUpload, token, setToken }}>
+        <AvatarContext.Provider value={{ stepName, setStepName, mainImage, setMainImage, UploadImage, setUploadImage, hasToken, setHasToken, urlUpload, setUrlUpload, token, setToken, role, setRole }}>
             {children}
         </AvatarContext.Provider>
     )

@@ -7,7 +7,8 @@ import Card from "@/UI/Card/Card";
 import Table from "@/UI/Table/Table";
 import Pagination from "@/UI/pagination/pagination";
 import Alarm from "@/UI/Alarm/alarm";
-import Modal from "@/UI/Modal/modal";
+// import Modal from "@/UI/Modal/modal";
+import SecurityTab from "@/UI/Security tab/security";
 // icons
 import { FaPlus } from "react-icons/fa";
 import { IoMdRefresh } from "react-icons/io";
@@ -26,7 +27,9 @@ import FilterStores from "./filter";
 import LoadingDashScreen from "@/components/loading-com/dash-load";
 // hooks
 import notification from "@/hooks/useNotifications";
-import Btn from "@/UI/BTN/Btn";
+// redux
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
+import { setStores, setIsCachingUpdate } from "@/Redux/slices/owner/store";
 
 interface StoresValues {
     _id: string;
@@ -52,7 +55,10 @@ interface StoresValues {
 }
 
 export default function StoreMain() {
-    const [Data, setData] = useState<StoresValues[]>([]);
+    // redux
+    const { store, isCachingUpdate } = useAppSelector((state) => state.stores);
+    const dispatch = useAppDispatch();
+    // states
     const [loading, setLoading] = useState(false)
     const [show, setShow] = useState<"cards" | "table">("cards");
     const [Filter, setFilter] = useState<string>("All");
@@ -78,7 +84,8 @@ export default function StoreMain() {
                 }
             });
             const data = await response.data;
-            setData(data.rooms);
+            dispatch(setStores(data.rooms));
+            dispatch(setIsCachingUpdate(true))
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
             console.log(err);
@@ -146,28 +153,33 @@ export default function StoreMain() {
 
     useEffect(() => {
         if (Filter === "All") {
-            setFilterData(Data);
+            setFilterData(store);
         } else if (Filter === "Rental Stores") {
-            setFilterData(Data.filter((item: StoresValues) => item.RentalType === "rental" || item.RentalType === "expire"));
+            setFilterData(store.filter((item: StoresValues) => item.RentalType === "rental" || item.RentalType === "expire"));
         } else if (Filter === "Not Rental Stores") {
-            setFilterData(Data.filter((item: StoresValues) => item.RentalType === "null"));
+            setFilterData(store.filter((item: StoresValues) => item.RentalType === "null"));
         } else if (Filter === "Stores Delete") {
-            setFilterData(Data.filter((item: StoresValues) => item.isDeleted === true));
+            setFilterData(store.filter((item: StoresValues) => item.isDeleted === true));
         } else if (Filter === "Stores Not Delete") {
-            setFilterData(Data.filter((item: StoresValues) => item.isDeleted === false));
+            setFilterData(store.filter((item: StoresValues) => item.isDeleted === false));
         } else if (Filter === "isStatus") {
-            setFilterData(Data.filter((item: StoresValues) => item.status === true));
+            setFilterData(store.filter((item: StoresValues) => item.status === true));
         } else if (Filter === "notIsStatus") {
-            setFilterData(Data.filter((item: StoresValues) => item.status === false));
+            setFilterData(store.filter((item: StoresValues) => item.status === false));
         } else if (Filter === "hasDiscount") {
-            setFilterData(Data.filter((item: StoresValues) => item.Discount >= 5));
+            setFilterData(store.filter((item: StoresValues) => item.Discount >= 5));
         } else {
-            setFilterData(Data.filter((item: StoresValues) => item.Area_Id._id === Filter));
+            setFilterData(store.filter((item: StoresValues) => item.Area_Id._id === Filter));
         }
-    }, [Data, Filter]);
+    }, [store, Filter]);
 
     useEffect(() => {
-        GetStores()
+        if (!isCachingUpdate) {
+            GetStores()
+        }
+        if (isCachingUpdate) {
+            setLoading(false)
+        }
     }, []);
 
 
@@ -300,10 +312,17 @@ export default function StoreMain() {
                     </>
                 )}
             </Pagination>
-            {!Data && <Alarm type="warning" IconsShow={false}>Not Found Stores</Alarm>}
-            <Modal openState={{ isOpen: openDelete, setIsOpen: setOpenDelete }} header={{ title: "Delete Store", isClose: true }} footer={{ btn: <Btn BtnStatus="alarm" onClick={handelDelete} isLoading={stopClick}>Active Delete</Btn> }}>
+            {!store && <Alarm type="warning" IconsShow={false}>Not Found Stores</Alarm>}
+            {/* <Modal openState={{ isOpen: openDelete, setIsOpen: setOpenDelete }} header={{ title: "Delete Store", isClose: true }} footer={{ btn: <Btn BtnStatus="alarm" onClick={handelDelete} isLoading={stopClick}>Active Delete</Btn> }}>
                 Do you sure want to delete this store
-            </Modal>
+            </Modal> */}
+            <SecurityTab
+                openState={{ isOpen: openDelete, setIsOpen: setOpenDelete }}
+                ACTIONS="fun"
+                Fun={handelDelete}
+                TitleAction="Delete Store"
+                role="owner"
+            />
         </div>
     )
 }

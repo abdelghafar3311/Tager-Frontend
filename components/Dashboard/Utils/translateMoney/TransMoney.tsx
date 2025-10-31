@@ -8,11 +8,13 @@ import notification from "@/hooks/useNotifications";
 import { getCookie } from "cookies-next"
 // route api
 import { TransferMoneyRoutes } from "@/config/routes";
-
+// dispatch
+import { useAppDispatch } from "@/hooks/reduxHooks";
 
 import Content from "@/components/Dashbpoard Tools/ContentStyle/content"
 import Inp from "@/UI/input/Inp";
 import Btn from "@/UI/BTN/Btn";
+import { GetCustomer } from "@/fetchData/fetch";
 
 interface formData {
     money: number;
@@ -21,6 +23,8 @@ interface formData {
 }
 
 export default function TransMoney() {
+    const dispatch = useAppDispatch();
+    GetCustomer(dispatch);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<formData>({
         money: 0,

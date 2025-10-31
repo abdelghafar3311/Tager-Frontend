@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./modal.module.scss"
 
 // test
@@ -16,7 +16,7 @@ interface ModalProps {
         setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
     }
     header: {
-        title: string
+        title: string | React.ReactNode
         isClose?: boolean
     }
     footer?: {

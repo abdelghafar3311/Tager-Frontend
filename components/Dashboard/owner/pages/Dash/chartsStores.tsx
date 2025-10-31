@@ -9,13 +9,19 @@ const RADIAN = Math.PI / 180;
 
 
 const RenderCustomizedLabel = ({
+    // @ts-expect-error
     cx,
+    // @ts-expect-error
     cy,
+    // @ts-expect-error
     midAngle,
+    // @ts-expect-error
     innerRadius,
+    // @ts-expect-error
     outerRadius,
+    // @ts-expect-error
     percent,
-}: any) => {
+}) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -110,6 +116,7 @@ export default function StoreAnalysis({ stores }: { stores: StoresValues[] }) {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
+                        // @ts-expect-error
                         label={RenderCustomizedLabel}
                         outerRadius={100}
                         fill="#8884d8"

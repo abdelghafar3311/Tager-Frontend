@@ -12,16 +12,17 @@ interface Props {
     isToken: boolean;
     token: any;
     mainImage: string;
+    role: "customer" | "owner";
 }
 
-function Content({ urlRoute, isToken, token, mainImage }: Props) {
-    const { stepName, setMainImage, setHasToken, setUrlUpload, setToken } = useAvatarContext();
+function Content({ urlRoute, isToken, token, mainImage, role }: Props) {
+    const { setRole, stepName, setMainImage, setHasToken, setUrlUpload, setToken } = useAvatarContext();
 
     setMainImage(mainImage);
     setHasToken(isToken);
     setUrlUpload(urlRoute);
     isToken && setToken(token);
-
+    setRole(role);
     return (
         <>
             <Steps steps={stepName} />
@@ -32,7 +33,7 @@ function Content({ urlRoute, isToken, token, mainImage }: Props) {
     );
 }
 
-export default function AvatarUpload({ urlRoute, isToken, token, mainImage }: Props) {
+export default function AvatarUpload({ urlRoute, isToken, token, mainImage, role }: Props) {
     return (
         <AvatarProvider>
             <Content
@@ -40,6 +41,7 @@ export default function AvatarUpload({ urlRoute, isToken, token, mainImage }: Pr
                 isToken={isToken}
                 token={token}
                 mainImage={mainImage}
+                role={role}
             />
         </AvatarProvider>
     );

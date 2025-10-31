@@ -3,14 +3,21 @@ import { useState, useEffect } from "react";
 // next
 import { useRouter } from "next/navigation"
 import Content from "@/components/Dashbpoard Tools/ContentStyle/content"
-
+// axios
 import axios, { AxiosError } from "axios"
-
+// UI
 import Inp from "@/UI/input/Inp"
 import Btn from "@/UI/BTN/Btn"
+// cookies
 import { getCookie } from "cookies-next"
+// routes
 import { RoomRoutes, AreaRoutes } from "@/config/routes"
+// notification
 import notification from "@/hooks/useNotifications"
+// redux
+import { useAppDispatch } from "@/hooks/reduxHooks"
+import { updateStoreCache } from "@/cache/updateCaching"
+
 
 interface FormData {
     nameRoom: string,
@@ -35,6 +42,7 @@ interface AreaFetch {
 }
 
 export default function FormStore({ workIt, ID }: Props) {
+    const dispatch = useAppDispatch();
     const router = useRouter();
     const [areas, setAreas] = useState<AreaFetch[]>();
     const [form, setForm] = useState<FormData>({
@@ -161,6 +169,7 @@ export default function FormStore({ workIt, ID }: Props) {
                 }
             })
             const data = await response.data;
+            await updateStoreCache(dispatch);
             notification(data.message, "success");
             router.push(`/owner_dashboard/stores`);
         } catch (error) {

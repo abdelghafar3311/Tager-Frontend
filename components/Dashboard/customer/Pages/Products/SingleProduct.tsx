@@ -22,7 +22,7 @@ import notification from "@/hooks/useNotifications";
 import { GetCustomer } from "@/fetchData/fetch";
 // redux despatch
 import { useAppSelector, useAppDispatch } from "@/hooks/reduxHooks";
-
+import { updateProductsCache } from "@/cache/updateCaching";
 // cookies
 import { getCookie } from "cookies-next";
 // load page
@@ -40,6 +40,15 @@ interface Form {
     discount: number;
     count: number;
     store: string;
+}
+
+interface rentals {
+    _id: string;
+    Room_Id: {
+        _id: string;
+        nameRoom: string;
+    };
+    subscriptionState: string;
 }
 
 export default function SingleProduct() {
@@ -60,7 +69,7 @@ export default function SingleProduct() {
     // load btn
     const [loadingBtn, setLoadingBtn] = useState<boolean>(false);
     // get Rentals
-    const [rentals, setRentals] = useState<any>([]);
+    const [rentals, setRentals] = useState<rentals[]>([]);
     // form
     const [form, setForm] = useState<Form>({
         nameProduct: "",
@@ -96,7 +105,7 @@ export default function SingleProduct() {
             });
             await GetCustomer(dispatch);
             const dataBase = await response.data;
-            setRentals(dataBase.rentals.filter((item: any) => item.subscriptionState === "active"));
+            setRentals(dataBase.rentals.filter((item: rentals) => item.subscriptionState === "active"));
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
             console.log(err);
@@ -129,6 +138,7 @@ export default function SingleProduct() {
                 },
             });
             const data = await response.data;
+            await updateProductsCache(dispatch);
             notification(data.message, "success");
             router.push("/dashboard_customer/product")
 
@@ -279,7 +289,7 @@ export default function SingleProduct() {
                             <SelectValue placeholder="Select Store" />
                         </SelectTrigger>
                         <SelectContent>
-                            {rentals.map((rental: any) => (
+                            {rentals.map((rental: rentals) => (
                                 <SelectItem key={rental._id} value={rental._id}>
                                     {rental.Room_Id.nameRoom}
                                 </SelectItem>
