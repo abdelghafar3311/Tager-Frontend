@@ -29,7 +29,7 @@ export default function Sidebar({ TopLinks, BottomLinks }: Props) {
     const logout = () => {
         deleteCookie("token");
         deleteCookie("role");
-
+        deleteCookie("hasProfile");
         router.push("/Auth/Login");
     }
 

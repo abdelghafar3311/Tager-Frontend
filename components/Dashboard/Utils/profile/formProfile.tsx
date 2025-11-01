@@ -77,7 +77,6 @@ export default function FormProfile({ role = "customer" }: Props) {
             setIsLoading(false);
             GetProfile(role, dispatch);
             setCookie("hasProfile", true);
-            console.log(data)
             role === "customer" ? router.push(`/dashboard_customer/profile/Avatar`) : router.push(`/owner_dashboard/profile/Avatar`)
         } catch (error) {
             const err = error as AxiosError<{ message: string }>;

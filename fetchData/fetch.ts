@@ -5,7 +5,7 @@ import { setProfile } from "@/Redux/slices/profile";
 import { setOwnerInfo } from "@/Redux/slices/ownerInfo";
 import { customer } from "@/Redux/slices/customer";
 import { auth } from "@/Redux/slices/auth";
-import { getCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 import { AppDispatch } from "@/Redux/store";
 
 export const GetCustomer = async (dispatch: AppDispatch) => {
@@ -83,6 +83,7 @@ export const GetProfile = async (
         isCached: true,
       })
     );
+    setCookie("hasProfile", true);
   } catch (error) {
     dispatch(
       setProfile({
@@ -95,6 +96,7 @@ export const GetProfile = async (
         isCached: true,
       })
     );
+    setCookie("hasProfile", false);
   }
 };
 

@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const role = req.cookies.get("role")?.value;
+  const hasProfile = req.cookies.get("hasProfile")?.value;
   const url = req.nextUrl.clone();
 
   // ✅ استثناء الملفات الثابتة والصور العامة
@@ -29,16 +30,17 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (url.pathname === "/" && role) {
+  if (url.pathname === "/" && hasProfile) {
     if (role === "customer") {
       url.pathname = "/dashboard_customer";
-    } else if (role === "owner") {
-      url.pathname = "/owner_dashboard";
+      return NextResponse.redirect(url);
     }
-    return NextResponse.redirect(url);
+    if (role === "owner") {
+      url.pathname = "/owner_dashboard";
+      return NextResponse.redirect(url);
+    }
   }
 
-  // ✅ تحقق من صلاحية الـ role
   if (url.pathname.startsWith("/dashboard_customer") && role !== "customer") {
     url.pathname = "/403";
     return NextResponse.redirect(url);
@@ -47,6 +49,31 @@ export function middleware(req: NextRequest) {
   if (url.pathname.startsWith("/owner_dashboard") && role !== "owner") {
     url.pathname = "/403";
     return NextResponse.redirect(url);
+  }
+
+  if (url.pathname.startsWith("/dashboard_customer") && !hasProfile) {
+    url.pathname = "/create_profile";
+    return NextResponse.redirect(url);
+  }
+
+  if (url.pathname.startsWith("/owner_dashboard") && !hasProfile) {
+    url.pathname = "/create_profile";
+    return NextResponse.redirect(url);
+  }
+
+  if (url.pathname.startsWith("/create_profile") && hasProfile) {
+    if (role === "customer") {
+      url.pathname = "/dashboard_customer";
+      return NextResponse.redirect(url);
+    }
+    if (role === "owner") {
+      url.pathname = "/owner_dashboard";
+      return NextResponse.redirect(url);
+    }
+    if (!role) {
+      url.pathname = "/403";
+      return NextResponse.redirect(url);
+    }
   }
 
   return NextResponse.next();

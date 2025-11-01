@@ -82,7 +82,8 @@ export default function FormRegister({ formFor }: Props) {
             })
 
             setCookie("token", response.data.token)
-            setCookie("role", formFor)
+            setCookie("role", formFor);
+            setCookie("hasProfile", false);
             dispatch(auth({
                 username: response.data.username,
                 email: response.data.email,
