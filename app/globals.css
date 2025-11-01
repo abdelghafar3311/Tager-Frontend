@@ -43,6 +43,11 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+
 .btn {
   padding: 10px 20px;
   border-radius: 5px;
