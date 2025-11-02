@@ -14,11 +14,11 @@ import { MdArrowBackIos, MdUpload } from "react-icons/md";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 
 export default function Upload() {
-    const { UploadImage, setStepName, urlUpload, hasToken, token } = useAvatarContext();
+    const { UploadImage, setStepName, urlUpload, hasToken, token, role } = useAvatarContext();
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
-
+    const urlBack = role === "customer" ? "/dashboard_customer/profile" : "/owner_dashboard/profile"
     const router = useRouter();
     const handleUpload = async () => {
         if (!UploadImage) {
@@ -56,7 +56,7 @@ export default function Upload() {
             if (response.status === 200) {
                 notification("Avatar uploaded successfully", "success");
                 setIsUploading(true);
-                router.push("/");
+                router.push(urlBack);
             }
         } catch (error) {
             console.error(error);

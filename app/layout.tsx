@@ -23,6 +23,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Tager",
   description: "Tager main page",
+  icons: {
+    icon: "/favicon.ico",
+  }
 };
 
 export default function RootLayout({

@@ -122,3 +122,10 @@ export const NotificationRoutes = {
 export const TransferMoneyRoutes = {
   transfer: `${base}/api/money/transfer`,
 };
+
+// .Sys
+export const SysRoutes = {
+  auth: `${base}/api/sys00/auth`,
+  details: `${base}/api/sys00/details`,
+  refactor: `${base}/api/sys00/refactor`,
+};

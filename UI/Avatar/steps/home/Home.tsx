@@ -24,6 +24,7 @@ export default function Home() {
 
     // make url delete image
     const urlDelete = role === "customer" ? CustomerRoutes.profile.avatar.delete : OwnerRoutes.profile.avatar.delete
+    const urlBack = role === "customer" ? "/dashboard_customer/profile" : "/owner_dashboard/profile"
     const [load, setLoad] = useState(false);
 
 
@@ -59,7 +60,7 @@ export default function Home() {
             });
             const data = await response.data;
             notification(data.message, "success");
-            router.back();
+            router.push(urlBack);
         } catch (error) {
             if (error instanceof AxiosError) {
                 notification(error.response?.data.message, "error");

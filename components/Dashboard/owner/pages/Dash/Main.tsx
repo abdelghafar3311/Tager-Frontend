@@ -89,6 +89,13 @@ export default function DashboardOwner() {
 
     }, [])
 
+    useEffect(() => {
+        if (isProfile === null) return;
+        if (isProfile === false) {
+            router.push("/create_profile");
+        }
+    }, [isProfile])
+
     if (loading) {
         return (
             <div className="h-screen flex justify-center items-center">
@@ -100,7 +107,7 @@ export default function DashboardOwner() {
     if (!isProfile) {
         return (
             <div className="h-screen flex justify-center items-center text-3xl">
-                Wait we redirecting you to create profile
+                Please Create Your Profile
             </div>
         )
     }

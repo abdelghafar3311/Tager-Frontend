@@ -78,7 +78,7 @@ export default function CustomerDash() {
     if (!isProfile) {
         return (
             <div className="h-screen flex justify-center items-center text-3xl">
-                Wait we redirecting you to create profile
+                Please Create Profile
             </div>
         )
     }

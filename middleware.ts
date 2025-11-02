@@ -3,31 +3,55 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
+  const sysToken = req.cookies.get("sysToken")?.value;
   const role = req.cookies.get("role")?.value;
   const hasProfile = req.cookies.get("hasProfile")?.value;
   const url = req.nextUrl.clone();
 
-  // ✅ استثناء الملفات الثابتة والصور العامة
   if (
     url.pathname.startsWith("/_next") ||
     url.pathname.startsWith("/api") ||
-    url.pathname.startsWith("/favicon.ico") ||
-    url.pathname.startsWith("/tlogo.png") ||
+    url.pathname === "/favicon.ico" ||
+    url.pathname === "/tlogo.png" ||
+    url.pathname.startsWith("/create_profile") ||
     url.pathname.startsWith("/images") ||
     url.pathname.startsWith("/Auth/Login") ||
-    url.pathname.startsWith("/Auth/Register") ||
-    (url.pathname === "/" && !role)
+    url.pathname.startsWith("/Auth/Register")
   ) {
     return NextResponse.next();
   }
 
-  if (!token) {
-    if (url.pathname === "/") {
-      return NextResponse.next();
+  if (url.pathname.startsWith("/SYS00")) {
+    if (url.pathname === "/SYS00/Refactor" && !sysToken) {
+      url.pathname = "/SYS00";
+      return NextResponse.redirect(url);
     }
 
-    url.pathname = "/Auth/Login";
-    return NextResponse.redirect(url);
+    if (url.pathname === "/SYS00" && sysToken) {
+      url.pathname = "/SYS00/Refactor";
+      return NextResponse.redirect(url);
+    }
+
+    return NextResponse.next();
+  }
+
+  if (!token) {
+    if (url.pathname !== "/") {
+      url.pathname = "/Auth/Login";
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next();
+  }
+
+  if (url.pathname.startsWith("/Auth")) {
+    if (role === "customer") {
+      url.pathname = "/dashboard_customer";
+      return NextResponse.redirect(url);
+    }
+    if (role === "owner") {
+      url.pathname = "/owner_dashboard";
+      return NextResponse.redirect(url);
+    }
   }
 
   if (url.pathname === "/" && hasProfile) {
