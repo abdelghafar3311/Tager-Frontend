@@ -81,7 +81,7 @@ export default function Home() {
                     <img src={mainImage} className="md:w-[350px] md:h-[350px] w-[150px] h-[150px]" />
                 </div>
             </div>
-            <div className="flex justify-center gap-2 items-center">
+            <div className="flex justify-center gap-2 items-center flex-col md:flex-row">
                 <Btn onClick={EditAction}>
                     <MdEdit />
                     <span>Edit</span>
