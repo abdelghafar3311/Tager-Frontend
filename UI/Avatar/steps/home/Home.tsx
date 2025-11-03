@@ -82,20 +82,20 @@ export default function Home() {
                 </div>
             </div>
             <div className="flex justify-center gap-2 items-center flex-col md:flex-row">
-                <Btn onClick={EditAction}>
+                <Btn onClick={EditAction} className="w-full">
                     <MdEdit />
                     <span>Edit</span>
                 </Btn>
-                <Btn BtnStatus="alarm" isLoading={load} onClick={DeleteAction}>
+                <Btn className="w-full" BtnStatus="alarm" isLoading={load} onClick={DeleteAction}>
                     <MdDelete />
                     <span>Clear</span>
                 </Btn>
-                <Btn isLight onClick={() => ref.current?.click()}>
+                <Btn className="w-full" isLight onClick={() => ref.current?.click()}>
                     <MdUpload />
                     <span>Change</span>
                 </Btn>
                 <input ref={ref} onChange={handleImageChange} type="file" name="avatar" className="hidden" />
-                <Btn BtnStatus="warning" onClick={() => router.back()}>
+                <Btn className="w-full" BtnStatus="warning" onClick={() => router.back()}>
                     Cancel
                 </Btn>
             </div>
