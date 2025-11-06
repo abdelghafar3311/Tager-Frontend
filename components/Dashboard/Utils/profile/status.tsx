@@ -26,8 +26,8 @@ export default function Status({ role }: Status) {
     const handelForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (loading) return notification("Please wait, we are processing your request", "info");
+        setLoading(true)
         try {
-            setLoading(true)
             const response = await axios.put(url, {
                 status: statusNow
             }, {
@@ -54,8 +54,8 @@ export default function Status({ role }: Status) {
             <h3 className={classes.title}>Status</h3>
             <p className={classes.export}>
                 <div className="flex items-center justify-between gap-2">
-                    <span className={`${classes.status} ${status ? classes.online : ""}`}>{status ? "Online" : "Offline"}</span>
-                    <button type="submit" className={`${classes.switch} ${status ? classes.online : ""}`} onClick={() => setStatusNow(!statusNow)}>
+                    <span className={`${classes.status} ${status ? classes.online : ""}`}>{status ? "Online" : "Offline"} {loading && "..."}</span>
+                    <button type="submit" className={`${classes.switch} ${status ? classes.online : ""} ${loading && "animate-pulse"}`} onClick={() => setStatusNow(!statusNow)}>
                         <span className={`${classes.circle} ${status ? classes.isOnline : ""}`}></span>
                     </button>
                 </div>

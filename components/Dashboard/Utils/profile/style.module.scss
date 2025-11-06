@@ -64,6 +64,21 @@
     &.online {
       background-color: #097;
     }
+    &.load {
+      background-color: #95cbe4;
+      animation: plur 1s infinite;
+      @keyframes plur {
+        0% {
+          background-color: #95cbe4;
+        }
+        50% {
+          background-color: #097;
+        }
+        100% {
+          background-color: #95cbe4;
+        }
+      }
+    }
     .circle {
       width: 10px;
       height: 10px;
