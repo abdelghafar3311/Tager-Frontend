@@ -1,5 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
+// style
+// import classes from "./style.module.scss"
 // axios
 import axios, { AxiosError } from "axios";
 // notification
@@ -279,7 +281,8 @@ export default function MainProducts() {
                     </div>
                 </div>
                 <div>
-                    <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" className="px-1 py-1 border border-gray-400 rounded-md" />
+                    <Inp type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" />
+                    {/* <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" className="px-1 py-1 border border-gray-400 rounded-md" /> */}
                 </div>
             </div>
             {searchData.length > 0 ? <Pagination data={searchData} itemsPerPage={10}>

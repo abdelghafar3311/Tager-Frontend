@@ -9,12 +9,13 @@ import { getCookie } from "cookies-next";
 import { RentalRoutes } from "@/config/routes";
 // notification
 import notification from "@/hooks/useNotifications";
-
+// icons
 import { CiAlignLeft, CiViewTable } from "react-icons/ci";
 import { IoMdRefresh } from "react-icons/io";
-
+// UI
 import Card from "@/UI/Card/Card";
 import Table from "@/UI/Table/Table";
+import Inp from "@/UI/input/Inp";
 import LoadingDashScreen from "@/components/loading-com/dash-load";
 import Pagination from "@/UI/pagination/pagination";
 // import Modal from "@/UI/Modal/modal";
@@ -184,7 +185,8 @@ export default function Rentals() {
                     </div>
                 </div>
                 <div>
-                    <input type="text" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} className="px-1 py-1 border border-gray-400 rounded-md" />
+                    <Inp placeholder="Search" onChange={(e) => setSearch(e.target.value)} type="text" value={search} />
+                    {/* <input type="text" placeholder="Search" value={search} onChange={(e) => setSearch(e.target.value)} className="px-1 py-1 border border-gray-400 rounded-md" /> */}
                 </div>
             </div>
             {searchData.length > 0 ? (

@@ -95,7 +95,7 @@ export default function Home() {
                     <span>Change</span>
                 </Btn>
                 <input ref={ref} onChange={handleImageChange} type="file" name="avatar" className="hidden" />
-                <Btn className="w-full" BtnStatus="warning" onClick={() => router.back()}>
+                <Btn className="w-full" BtnStatus="warning" onClick={() => router.push(urlBack)}>
                     Cancel
                 </Btn>
             </div>
