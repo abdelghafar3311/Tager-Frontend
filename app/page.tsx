@@ -16,11 +16,11 @@ export default function Home() {
           <h3 className="text-[14px] text-[#097] font-extrabold">Tager</h3>
         </div>
         <div className="flex items-center gap-4">
-          <a href="#home" className="text-[14px] text-gray-500 transition hover:text-gray-700">Home</a>
-          <a href="#about" className="text-[14px] text-gray-500 transition hover:text-gray-700">About</a>
-          <a href="#customer" className="text-[14px] text-gray-500 transition hover:text-gray-700">Customer</a>
-          <a href="#owner" className="text-[14px] text-gray-500 transition hover:text-gray-700">Owner</a>
-          <a href="#Join_Us" className="text-[14px] text-gray-500 transition hover:text-gray-700">Join Us</a>
+          <a href="#home" className="text-[12px] text-gray-500 transition hover:text-gray-700">Home</a>
+          <a href="#about" className="text-[12px] text-gray-500 transition hover:text-gray-700">About</a>
+          <a href="#customer" className="text-[12px] text-gray-500 transition hover:text-gray-700">Customer</a>
+          <a href="#owner" className="text-[12px] text-gray-500 transition hover:text-gray-700">Owner</a>
+          <a href="#Join_Us" className="text-[12px] text-gray-500 transition hover:text-gray-700">Join Us</a>
         </div>
       </header>
       <main id="home" className="flex flex-col mt-[56px] h-[calc(100vh-56px)] items-center justify-center gap-6 text-center bg-white">
