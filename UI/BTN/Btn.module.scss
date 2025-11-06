@@ -47,7 +47,7 @@ $alarm: #b91c1c;
       color: $color;
       border: 1px solid $color;
       &:hover {
-        background-color: $colorLD;
+        background-color: #3ec5a81c;
       }
     }
     &.alarm {
@@ -55,7 +55,7 @@ $alarm: #b91c1c;
       color: $alarm;
       border: 1px solid $alarm;
       &:hover {
-        background-color: #b91c1c60;
+        background-color: #b91c1c21;
       }
     }
     &.warning {
@@ -63,8 +63,7 @@ $alarm: #b91c1c;
       color: $warning;
       border: 1px solid $warning;
       &:hover {
-        background-color: #b4530960;
-        color: #fff;
+        background-color: #b4530923;
       }
     }
   }
