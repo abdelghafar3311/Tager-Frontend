@@ -15,7 +15,8 @@ import { IoMdRefresh } from "react-icons/io";
 import { CiAlignLeft, CiViewTable } from "react-icons/ci";
 import { FaEye } from "react-icons/fa";
 import { MdDelete, MdModeEditOutline, MdDeleteForever } from "react-icons/md";
-
+// fetch
+import { GetOwnerInfo } from "@/fetchData/fetch";
 // routes of store
 import { RoomRoutes } from "@/config/routes";
 // axios
@@ -85,7 +86,8 @@ export default function StoreMain() {
             });
             const data = await response.data;
             dispatch(setStores(data.rooms));
-            dispatch(setIsCachingUpdate(true))
+            dispatch(setIsCachingUpdate(true));
+            GetOwnerInfo(dispatch);
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
             console.log(err);

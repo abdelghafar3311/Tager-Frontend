@@ -1,12 +1,9 @@
 "use client"
 import { useState, useEffect } from "react";
 // UI
-import Msg from "@/UI/message/Msg";
 import Card from "@/UI/Card/Card";
 import Modal from "@/UI/Modal/modal";
-import Btn from "@/UI/BTN/Btn";
 import Alarm from "@/UI/Alarm/alarm";
-import Content from "@/components/Dashbpoard Tools/ContentStyle/content";
 import Table from "@/UI/Table/Table";
 import SecurityTab from "@/UI/Security tab/security";
 // icons
@@ -26,6 +23,8 @@ import { AreaRoutes } from "@/config/routes";
 import { getCookie } from "cookies-next";
 // notification
 import notification from "@/hooks/useNotifications";
+// fetch
+import { GetOwnerInfo } from "@/fetchData/fetch";
 // Redux
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
 import { setArea, setIsCachingUpdate } from "@/Redux/slices/owner/area";
@@ -61,7 +60,8 @@ export default function Area() {
             });
             const data = await response.data;
             dispatch(setArea(data));
-            dispatch(setIsCachingUpdate(true))
+            dispatch(setIsCachingUpdate(true));
+            GetOwnerInfo(dispatch);
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
             console.log(err);

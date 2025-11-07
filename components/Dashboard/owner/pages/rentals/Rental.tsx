@@ -9,6 +9,8 @@ import { getCookie } from "cookies-next";
 import { RentalRoutes } from "@/config/routes";
 // notification
 import notification from "@/hooks/useNotifications";
+// fetch
+import { GetOwnerInfo } from "@/fetchData/fetch";
 // icons
 import { CiAlignLeft, CiViewTable } from "react-icons/ci";
 import { IoMdRefresh } from "react-icons/io";
@@ -82,6 +84,7 @@ export default function Rentals() {
             const data = await response.data;
             dispatch(setRentals(data));
             dispatch(setIsCachingUpdate(true));
+            GetOwnerInfo(dispatch);
             setLoading(false);
         } catch (error) {
             if (error instanceof AxiosError) {

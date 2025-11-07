@@ -12,6 +12,8 @@ import LoadingDashScreen from "@/components/loading-com/dash-load";
 import axios, { AxiosError } from "axios";
 // routes
 import { RentalRoutes } from "@/config/routes";
+// fetch
+import { GetOwnerInfo } from "@/fetchData/fetch";
 // cookies
 import { getCookie } from "cookies-next";
 // notification
@@ -106,9 +108,9 @@ export default function ReqRental() {
                 }
             });
             const data = await response.data;
-            console.log(data);
             dispatch(setReqRental(data));
             dispatch(setIsCachingUpdate(true));
+            GetOwnerInfo(dispatch);
             setLoading(false)
         } catch (error) {
             const err = error as AxiosError<{ message: string }>
