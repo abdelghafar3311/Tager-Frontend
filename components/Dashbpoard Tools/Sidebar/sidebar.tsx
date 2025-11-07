@@ -5,7 +5,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { RiLogoutBoxLine } from "react-icons/ri";
 
-import { useRouter } from "next/navigation";
 import { deleteCookie } from "cookies-next";
 import Msg from "@/UI/message/Msg"
 
@@ -24,13 +23,12 @@ interface Props {
 
 export default function Sidebar({ TopLinks, BottomLinks }: Props) {
     const path = usePathname();
-
-    const router = useRouter();
     const logout = () => {
         deleteCookie("token");
         deleteCookie("role");
         deleteCookie("hasProfile");
-        router.push("/Auth/Login");
+        // router.push("/Auth/Login");
+        window.location.pathname = "/Auth/Login";
     }
 
     const comparePath = (link: string) => {

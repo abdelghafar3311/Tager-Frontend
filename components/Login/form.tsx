@@ -74,6 +74,7 @@ export default function FormLogin() {
             })
             setCookie("token", response.data.token);
             setCookie("role", form.type);
+            setCookie("hasProfile", true);
             dispatch(auth({
                 username: response.data.username,
                 email: response.data.email,
