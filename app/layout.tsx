@@ -24,7 +24,8 @@ export const metadata: Metadata = {
   title: "Tager",
   description: "Tager main page",
   icons: {
-    icon: "./favicon.ico",
+    icon: "app/favicon.ico",
+    apple: "app/favicon.ico"
   }
 };
 
