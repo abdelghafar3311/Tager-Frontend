@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export default function AboutTager() {
     return (
-        <main id="about" className="flex flex-col mt-[56px] p-2 justify-center px-6 sm:px-16 text-center bg-[#f2f8f7]">
+        <main id="about" className="flex flex-col mt-[56px] p-2 justify-center items-center px-6 sm:px-16 text-center bg-[#f2f8f7]">
             <motion.h1 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2 }}
