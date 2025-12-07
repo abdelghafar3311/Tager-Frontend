@@ -98,7 +98,7 @@ export default function FormProfile({ role = "customer" }: Props) {
                         <div>
                             <Inp type="text" isRequired name="name" placeholder="full name" label="Full Name" isLabel onChange={(e) => formData(e.target.name, e.target.value)} />
                             <Inp type="text" name="phone" isRequired placeholder="your phone" label="Phone" isLabel onChange={(e) => formData(e.target.name, e.target.value)} />
-                            <Inp type="text" name="address" placeholder="your address" label="Address" isLabel onChange={(e) => formData(e.target.name, e.target.value)} />
+                            <Inp type="text" name="address" isRequired placeholder="your address" label="Address" isLabel onChange={(e) => formData(e.target.name, e.target.value)} />
                             <Inp name="description" isArea placeholder="Write your description" label="Description" isLabel onChange={(e) => formData(e.target.name, e.target.value)} />
                         </div>
                         <div className="flex justify-center mt-5">
